@@ -16,13 +16,15 @@
             display: block;
         }
     </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
 </head>
 
 <body>
 
-    <script src="js/three.js"></script>
-
     <script>
+
         (function () { var script = document.createElement('script'); script.onload = function () { var stats = new Stats(); document.body.appendChild(stats.dom); requestAnimationFrame(function loop() { stats.update(); requestAnimationFrame(loop) }); }; script.src = 'https://mrdoob.github.io/stats.js/build/stats.min.js'; document.head.appendChild(script); })()
 
         var scene = new THREE.Scene();
@@ -43,7 +45,7 @@
 
         //controls = new THREE.OrbitControls( camera, renderer.domElement );
 
-        var axesHelper = new THREE.AxesHelper(12);
+        //var axesHelper = new THREE.AxesHelper(12);
         //scene.add( axesHelper );
 
         camera.position.z = 60;

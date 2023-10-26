@@ -53,7 +53,7 @@ aiPad.position.z = -27.5;
 scene.add( aiPad );
 
 var ballGeo = new THREE.BoxGeometry( 3, 3, 3 );
-var ballMaterial = new THREE.MeshToonMaterial( { color: 0xffffff,  } );
+var ballMaterial = new THREE.MeshLambertMaterial( { color: 0xffffff,  } );
 var ball = new THREE.Mesh( ballGeo, ballMaterial );
 ball.position.x = 0;
 ball.position.z = 0;
