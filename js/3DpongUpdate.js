@@ -1,8 +1,10 @@
 const MIN_BOUNCE_ANGLE = 30;
 const BALL_SPIN = 2;
 const glichChance = 0.4;
-const PADDLE_SPEED = 0.35;
+const PADDLE_SPEED = 0.5;
+const AI_PADDLE_SPEED = 0.5;
 const BALL_SPEED = 0.35;
+const RANDOM_EFFECT = 0.35;
 
 let paddleXV = 0;
 let ballXV = BALL_SPEED;
@@ -90,9 +92,9 @@ function updateAiPaddle() {
     var x_target = ball.position.x;
     var diff = -( ( aiPad.position.x + ( 9 / 2 ) ) - x_target );
     if( ball.position.x < aiPad.position.x ) {
-        diff = -0.35;
+        diff = -AI_PADDLE_SPEED;
     } else if( ball.position.x > aiPad.position.x ) {
-        diff = 0.35;
+        diff = AI_PADDLE_SPEED;
     }
     aiPad.position.x += diff;
     if ( aiPad.position.x < -21.5 + 5.6 ) {
@@ -113,8 +115,8 @@ function updateBall() {
         && ball.position.x < userPad.position.x + 9 * 0.5 + 3 * 0.5
     ) {
         ball.position.z = userPad.position.z - 3;
-        ballXV += ( PADDLE_SPEED / 2 );
-        ballZV = -ballZV;
+        ballXV += ( PADDLE_SPEED / 2 ) - Math.random() * RANDOM_EFFECT;
+        ballZV = -ballZV - Math.random() * RANDOM_EFFECT;
     }
 
     if ( ball.position.z > aiPad.position.z - 3 * 0.5 - 3 * 0.5 
@@ -123,8 +125,8 @@ function updateBall() {
         && ball.position.x < aiPad.position.x + 9 * 0.5 + 3 * 0.5
     ) {
         ball.position.z = aiPad.position.z + 3;
-        ballXV += ( PADDLE_SPEED / 2 );
-        ballZV = -ballZV;
+        ballXV += ( PADDLE_SPEED / 2 ) + Math.random() * RANDOM_EFFECT;
+        ballZV = -ballZV + Math.random() * RANDOM_EFFECT;
     }    
 
     if ( ball.position.x < -21.5 + 3.45 ) {
@@ -137,11 +139,15 @@ function updateBall() {
 
     if ( ball.position.z > 29.5 ) {
         aiScore++;
+        console.log("AI Score: " + aiScore);
+        console.log("Player Score: " + userScore);
         if ( !win && !lose ) {
             newBall();
         }
     } else if ( ball.position.z < -29.5 ) {
         userScore++;
+      console.log("AI Score: " + aiScore);
+      console.log("Player Score: " + userScore);
         if ( !win && !lose ) {
             newBall();
         }
