@@ -11,12 +11,12 @@ topWall.position.z = -31.5;
 topWall.position.y = -0.5;
 scene.add( topWall );
 
-var bottemGeo = new THREE.BoxGeometry( 40, 3, 3 );
-var bottemMaterial = new THREE.MeshLambertMaterial( { color: 0x7b7f7c } );
-var bottemWall = new THREE.Mesh( bottemGeo, bottemMaterial );
-bottemWall.position.z = 31.5;
-bottemWall.position.y = -0.5;
-scene.add( bottemWall );
+var bottomGeo = new THREE.BoxGeometry( 40, 3, 3 );
+var bottomMaterial = new THREE.MeshLambertMaterial( { color: 0x7b7f7c } );
+var bottomWall = new THREE.Mesh( bottomGeo, bottomMaterial );
+bottomWall.position.z = 31.5;
+bottomWall.position.y = -0.5;
+scene.add( bottomWall );
 
 var leftGeo = new THREE.BoxGeometry( 3, 3, 66 );
 var leftMaterial = new THREE.MeshLambertMaterial( { color: 0x7b7f7c } );
