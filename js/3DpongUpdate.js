@@ -6,6 +6,8 @@ const BALL_SPEED = 0.35;
 const RANDOM_EFFECT = 0.35;
 
 let paddleXV = 0;
+let paddleLeft = false;
+let paddleRight = false;
 let ballXV = BALL_SPEED;
 let ballZV = BALL_SPEED;
 let aiScore = 0;
@@ -36,10 +38,10 @@ function update() {
 function keyDown(/** @type {keyboardEvent} */ ev) {
     switch (ev.keyCode) {
         case 37:
-            movePaddle(Direction.LEFT);
+            paddleLeft = true;
             break;
         case 39:
-            movePaddle(Direction.RIGHT);
+            paddleRight = true;
             break;
         case 32:
             if ( win || lose ) {
@@ -55,29 +57,24 @@ function keyDown(/** @type {keyboardEvent} */ ev) {
 function keyUp(/** @type {keyboardEvent} */ ev) {
     switch (ev.keyCode) {
         case 37:
-            movePaddle(Direction.STOP);
+            paddleLeft = false;
             break;
         case 39:
-            movePaddle(Direction.STOP);
-            break;
-    }
-}
-
-function movePaddle(direction) {
-    switch(direction) {
-        case Direction.LEFT:
-            paddleXV = -PADDLE_SPEED;
-            break;
-        case Direction.RIGHT:
-            paddleXV = PADDLE_SPEED;
-            break;
-        case Direction.STOP:
-            paddleXV = 0;
+            paddleRight = false;
             break;
     }
 }
 
 function updateUserPaddle() {
+
+    if (paddleLeft && !paddleRight) {
+        paddleXV = -PADDLE_SPEED;
+    } else if (!paddleLeft && paddleRight) {
+        paddleXV = PADDLE_SPEED;
+    } else {
+        paddleXV = 0;
+    }
+
     userPad.position.x += paddleXV;
 
     if (userPad.position.x < -21.5 + 5.6) {
