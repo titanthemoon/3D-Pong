@@ -1,6 +1,5 @@
 const MIN_BOUNCE_ANGLE = 30;
 const BALL_SPIN = 2;
-const glichChance = 0.4;
 const PADDLE_SPEED = 0.5;
 const AI_PADDLE_SPEED = 0.5;
 const BALL_SPEED = 0.35;
@@ -14,7 +13,6 @@ let userScore = 0;
 let win = false;
 let lose = false;
 let paused = false;
-
 
 const Direction = {
     LEFT: 0,
@@ -61,6 +59,7 @@ function keyUp(/** @type {keyboardEvent} */ ev) {
             break;
         case 39:
             movePaddle( Direction.STOP );
+            break;
     }
 }
 
@@ -115,7 +114,7 @@ function updateBall() {
         && ball.position.x < userPad.position.x + 9 * 0.5 + 3 * 0.5
     ) {
         ball.position.z = userPad.position.z - 3;
-        ballXV += ( PADDLE_SPEED / 2 ) - Math.random() * RANDOM_EFFECT;
+        ballXV += ( PADDLE_SPEED / 2 ) - (Math.random() * RANDOM_EFFECT * (Math.pow(-1, Math.floor(Math.random() * 10))));
         ballZV = -ballZV - Math.random() * RANDOM_EFFECT;
     }
 
@@ -125,7 +124,7 @@ function updateBall() {
         && ball.position.x < aiPad.position.x + 9 * 0.5 + 3 * 0.5
     ) {
         ball.position.z = aiPad.position.z + 3;
-        ballXV += ( PADDLE_SPEED / 2 ) + Math.random() * RANDOM_EFFECT;
+        ballXV += ( PADDLE_SPEED / 2 ) + (Math.random() * RANDOM_EFFECT * (Math.pow(-1, Math.floor(Math.random() * 10))));
         ballZV = -ballZV + Math.random() * RANDOM_EFFECT;
     }    
 
