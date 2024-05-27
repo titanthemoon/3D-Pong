@@ -20,13 +20,13 @@ const Direction = {
     STOP: 2
 }
 
-document.addEventListener( 'keydown', keyDown );
-document.addEventListener( 'keyup', keyUp );
+document.addEventListener('keydown', keyDown);
+document.addEventListener('keyup', keyUp);
 
 function update() {
     updateWin();
     updateLose();
-    if ( !win && !lose && !paused ) {
+    if (!win && !lose && !paused) {
         updateUserPaddle();
         updateAiPaddle();
         updateBall();
@@ -34,12 +34,12 @@ function update() {
 }
 
 function keyDown(/** @type {keyboardEvent} */ ev) {
-    switch ( ev.keyCode ) {
+    switch (ev.keyCode) {
         case 37:
-            movePaddle( Direction.LEFT );
+            movePaddle(Direction.LEFT);
             break;
         case 39:
-            movePaddle( Direction.RIGHT );
+            movePaddle(Direction.RIGHT);
             break;
         case 32:
             if ( win || lose ) {
@@ -53,18 +53,18 @@ function keyDown(/** @type {keyboardEvent} */ ev) {
 }
 
 function keyUp(/** @type {keyboardEvent} */ ev) {
-    switch ( ev.keyCode ) {
+    switch (ev.keyCode) {
         case 37:
-            movePaddle( Direction.STOP );
+            movePaddle(Direction.STOP);
             break;
         case 39:
-            movePaddle( Direction.STOP );
+            movePaddle(Direction.STOP);
             break;
     }
 }
 
-function movePaddle( direction ) {
-    switch( direction ) {
+function movePaddle(direction) {
+    switch(direction) {
         case Direction.LEFT:
             paddleXV = -PADDLE_SPEED;
             break;
@@ -80,25 +80,25 @@ function movePaddle( direction ) {
 function updateUserPaddle() {
     userPad.position.x += paddleXV;
 
-    if ( userPad.position.x < -21.5 + 5.6 ) {
+    if (userPad.position.x < -21.5 + 5.6) {
         userPad.position.x = -21.5 + 5.6;
-    } else if ( userPad.position.x > 21.5 - 5.6 ) {
+    } else if (userPad.position.x > 21.5 - 5.6) {
        userPad.position.x = 21.5 - 5.6;
     }
 }
 
 function updateAiPaddle() {
     var x_target = ball.position.x;
-    var diff = -( ( aiPad.position.x + ( 9 / 2 ) ) - x_target );
-    if( ball.position.x < aiPad.position.x ) {
+    var diff = -((aiPad.position.x + (9 / 2)) - x_target);
+    if (ball.position.x < aiPad.position.x) {
         diff = -AI_PADDLE_SPEED;
-    } else if( ball.position.x > aiPad.position.x ) {
+    } else if (ball.position.x > aiPad.position.x) {
         diff = AI_PADDLE_SPEED;
     }
     aiPad.position.x += diff;
-    if ( aiPad.position.x < -21.5 + 5.6 ) {
+    if (aiPad.position.x < -21.5 + 5.6) {
         aiPad.position.x = -21.5 + 5.6;
-    } else if ( aiPad.position.x > 21.5 - 5.6 ) {
+    } else if (aiPad.position.x > 21.5 - 5.6) {
         aiPad.position.x = 21.5 - 5.6;
     }
 }
@@ -108,7 +108,7 @@ function updateBall() {
     ball.position.x += ballXV;
     ball.position.z += ballZV;
 
-    if ( ball.position.z > userPad.position.z - 3 * 0.5 - 3 * 0.5 
+    if (ball.position.z > userPad.position.z - 3 * 0.5 - 3 * 0.5 
         && ball.position.z < userPad.position.z + 3 * 0.5
         && ball.position.x > userPad.position.x - 9 * 0.5 - 3 * 0.5
         && ball.position.x < userPad.position.x + 9 * 0.5 + 3 * 0.5
@@ -118,7 +118,7 @@ function updateBall() {
         ballZV = -ballZV - Math.random() * RANDOM_EFFECT;
     }
 
-    if ( ball.position.z > aiPad.position.z - 3 * 0.5 - 3 * 0.5 
+    if (ball.position.z > aiPad.position.z - 3 * 0.5 - 3 * 0.5 
         && ball.position.z < aiPad.position.z + 3 * 0.5
         && ball.position.x > aiPad.position.x - 9 * 0.5 - 3 * 0.5
         && ball.position.x < aiPad.position.x + 9 * 0.5 + 3 * 0.5
@@ -128,34 +128,34 @@ function updateBall() {
         ballZV = -ballZV + Math.random() * RANDOM_EFFECT;
     }    
 
-    if ( ball.position.x < -21.5 + 3.45 ) {
+    if (ball.position.x < -21.5 + 3.45 ) {
         ball.position.x = -21.5 + 3.46;
         ballXV = -ballXV;
-    } else if ( ball.position.x > 21.5 - 3.45 ) {
+    } else if (ball.position.x > 21.5 - 3.45 ) {
         ball.position.x = 21.5 - 3.46;
         ballXV = -ballXV;
     }
 
-    if ( ball.position.z > 29.5 ) {
+    if (ball.position.z > 29.5 ) {
         aiScore++;
         document.getElementById("AIScore").innerHTML = aiScore;
         document.getElementById("PlayerScore").innerHTML = userScore;
-        if ( !win && !lose ) {
+        if (!win && !lose) {
             newBall();
         }
-    } else if ( ball.position.z < -29.5 ) {
+    } else if (ball.position.z < -29.5) {
         userScore++;
         document.getElementById("AIScore").innerHTML = aiScore;
         document.getElementById("PlayerScore").innerHTML = userScore;
-        if ( !win && !lose ) {
+        if (!win && !lose) {
             newBall();
         }
     }
 }
 
-function applyBALL_SPEED( angle ) {
-    ballXV = BALL_SPEED * Math.cos( angle );
-    ballYV = -BALL_SPEED * Math.sin( angle );
+function applyBALL_SPEED(angle) {
+    ballXV = BALL_SPEED * Math.cos(angle);
+    ballYV = -BALL_SPEED * Math.sin(angle);
 }
 
 function newBall() {
@@ -166,7 +166,7 @@ function newBall() {
 }
 
 function updateWin() {
-    if ( userScore >= 7 ) {
+    if (userScore >= 7 && Math.abs(aiScore - userScore) >= 2) {
         ballXV = 0;
         ballYV = 0;
         win = true;
@@ -174,7 +174,7 @@ function updateWin() {
 }
 
 function updateLose() {
-    if ( aiScore >= 7 ) {
+    if (aiScore >= 7 && Math.abs(aiScore - userScore) >= 2) {
         ballXV = 0;
         ballYV = 0;
         lose = true;
@@ -191,7 +191,7 @@ function newGame() {
     newBall();
 }
 
-function move ( x, z ) {
+function move (x, z) {
     aiPad.position.x += x;
     aiPad.position.z += z;
 }
