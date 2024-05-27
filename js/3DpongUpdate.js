@@ -138,15 +138,15 @@ function updateBall() {
 
     if ( ball.position.z > 29.5 ) {
         aiScore++;
-        console.log("AI Score: " + aiScore);
-        console.log("Player Score: " + userScore);
+        document.getElementById("AIScore").innerHTML = aiScore;
+        document.getElementById("PlayerScore").innerHTML = userScore;
         if ( !win && !lose ) {
             newBall();
         }
     } else if ( ball.position.z < -29.5 ) {
         userScore++;
-      console.log("AI Score: " + aiScore);
-      console.log("Player Score: " + userScore);
+        document.getElementById("AIScore").innerHTML = aiScore;
+        document.getElementById("PlayerScore").innerHTML = userScore;
         if ( !win && !lose ) {
             newBall();
         }
