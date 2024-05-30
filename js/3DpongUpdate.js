@@ -1,15 +1,24 @@
 const MIN_BOUNCE_ANGLE = 30;
 const BALL_SPIN = 2;
-const PADDLE_SPEED = 0.5;
-const AI_PADDLE_SPEED = 0.5;
-const BALL_SPEED = 0.35;
-const RANDOM_EFFECT = 0.35;
+const PADDLE_SPEED = 42;
+const AI_PADDLE_SPEED = 30;
+const BALL_SPEED = 21;
+const RANDOM_EFFECT = 21;
+
+// physics things for wall collisions
+const UK = 0.1; // coefficient of kinetic friction
+const M = 1; // mass of ball
+const R = 1.5; // radius of ball
+const ROT_I = (2 / 5) * M * R * R; // rotational intertia of ball
+const COL_TIME = 1 / 30; // time of a collision
 
 let paddleXV = 0;
+let aiPaddleXV = 0;
 let paddleLeft = false;
 let paddleRight = false;
 let ballXV = BALL_SPEED;
 let ballZV = BALL_SPEED;
+let ballAV = 0;
 let aiScore = 0;
 let userScore = 0;
 let win = false;
@@ -68,9 +77,9 @@ function keyUp(/** @type {keyboardEvent} */ ev) {
 function updateUserPaddle() {
 
     if (paddleLeft && !paddleRight) {
-        paddleXV = -PADDLE_SPEED;
+        paddleXV = -PADDLE_SPEED * timeDelta;
     } else if (!paddleLeft && paddleRight) {
-        paddleXV = PADDLE_SPEED;
+        paddleXV = PADDLE_SPEED * timeDelta;
     } else {
         paddleXV = 0;
     }
@@ -85,14 +94,14 @@ function updateUserPaddle() {
 }
 
 function updateAiPaddle() {
-    var x_target = ball.position.x;
-    var diff = -((aiPad.position.x + (9 / 2)) - x_target);
-    if (ball.position.x < aiPad.position.x) {
-        diff = -AI_PADDLE_SPEED;
-    } else if (ball.position.x > aiPad.position.x) {
-        diff = AI_PADDLE_SPEED;
+    if (ball.position.x < aiPad.position.x - 0.5) {
+        aiPaddleXV = -AI_PADDLE_SPEED * timeDelta;
+    } else if (ball.position.x > aiPad.position.x + 0.5) {
+        aiPaddleXV = AI_PADDLE_SPEED * timeDelta;
+    } else {
+        aiPaddleXV = 0;
     }
-    aiPad.position.x += diff;
+    aiPad.position.x += aiPaddleXV;
     if (aiPad.position.x < -21.5 + 5.6) {
         aiPad.position.x = -21.5 + 5.6;
     } else if (aiPad.position.x > 21.5 - 5.6) {
@@ -102,8 +111,9 @@ function updateAiPaddle() {
 
 function updateBall() {
 
-    ball.position.x += ballXV;
-    ball.position.z += ballZV;
+    ball.position.x += ballXV * timeDelta;
+    ball.position.z += ballZV * timeDelta;
+    ball.rotation.y += ballAV * timeDelta;
 
     if (ball.position.z > userPad.position.z - 3 * 0.5 - 3 * 0.5 
         && ball.position.z < userPad.position.z + 3 * 0.5
@@ -111,7 +121,9 @@ function updateBall() {
         && ball.position.x < userPad.position.x + 9 * 0.5 + 3 * 0.5
     ) {
         ball.position.z = userPad.position.z - 3;
-        ballXV += ( PADDLE_SPEED / 2 ) - (Math.random() * RANDOM_EFFECT * (Math.pow(-1, Math.floor(Math.random() * 10))));
+        let fk = (-2 * M * UK * ballZV) / COL_TIME;
+        ballAV -= ((-R * fk * COL_TIME) / ROT_I);
+        ballXV -= fk * COL_TIME / M;
         ballZV = -ballZV - Math.random() * RANDOM_EFFECT;
     }
 
@@ -121,16 +133,25 @@ function updateBall() {
         && ball.position.x < aiPad.position.x + 9 * 0.5 + 3 * 0.5
     ) {
         ball.position.z = aiPad.position.z + 3;
-        ballXV += ( PADDLE_SPEED / 2 ) + (Math.random() * RANDOM_EFFECT * (Math.pow(-1, Math.floor(Math.random() * 10))));
+        let fk = (-2 * M * UK * ballZV) / COL_TIME;
+        ballAV -= ((-R * fk * COL_TIME) / ROT_I);
+        ballXV -= fk * COL_TIME / M;
         ballZV = -ballZV + Math.random() * RANDOM_EFFECT;
     }    
 
     if (ball.position.x < -21.5 + 3.45 ) {
+        let fk = (-2 * M * UK * ballXV) / COL_TIME;
         ball.position.x = -21.5 + 3.46;
         ballXV = -ballXV;
+        ballAV -= ((-R * fk * COL_TIME) / ROT_I);
+        ballZV -= fk * COL_TIME / M;
+        
     } else if (ball.position.x > 21.5 - 3.45 ) {
+        let fk = (-2 * M * UK * ballXV) / COL_TIME;
         ball.position.x = 21.5 - 3.46;
         ballXV = -ballXV;
+        ballAV -= ((-R * fk * COL_TIME) / ROT_I);
+        ballZV -= fk * COL_TIME / M;
     }
 
     if (ball.position.z > 29.5 ) {
@@ -158,6 +179,8 @@ function applyBALL_SPEED(angle) {
 function newBall() {
     ballXV = BALL_SPEED;
     ballZV = BALL_SPEED;
+    ballAV = 0;
+    ball.rotation.y = 0;
     ball.position.z = 0;
     ball.position.x = 0;
 }
