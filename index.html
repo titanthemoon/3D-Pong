@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>THREEJS PONG</title>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
@@ -14,6 +16,18 @@
             width: 100%;
             height: 100%;
             display: block;
+        }
+
+        .scoreboard {
+            position: fixed;
+            top: 0%;
+            left: 100%;
+            width: 10rem;
+            text-align: center;
+            color: #FFFFFF;
+            transform: translate(-100%, 0%);
+            background-color: rgba(255, 255, 255, 10%);
+            font-family: "Quantico", sans-serif;
         }
     </style>
 
@@ -51,6 +65,8 @@
         camera.position.z = 60;
         camera.position.y = 40;
         camera.rotation.x = 24.5;
+
+        let timeDelta, timeLast;
     </script>
 
     <script src="js/3DpongLight.js"></script>
@@ -64,15 +80,27 @@
     </script>
 
     <script>
-        function animate() {
+
+        function animate(timeNow) {
             requestAnimationFrame(animate);
-
-            render();
-            update();
+            if (!timeLast) {
+                timeLast = timeNow;
+            }
+            timeDelta = (timeNow - timeLast) * 0.001;
+            timeLast = timeNow;
         }
-
-        animate();
+        requestAnimationFrame(animate);
     </script>
+    <div class="scoreboard">
+        <div style="height: 100%; width: 50%; float: left;">
+            <h2>AI</h2>
+            <h2 id="AIScore">0</h2>
+        </div>
+        <div style="height: 100%; width: 50%; float: right;">
+            <h2>YOU</h2>
+            <h2 id="PlayerScore">0</h2>
+        </div>
+    </div>
 </body>
 
 </html>
