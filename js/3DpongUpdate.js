@@ -3,7 +3,7 @@ const BALL_SPIN = 2;
 const PADDLE_SPEED = 42;
 const AI_PADDLE_SPEED = 30;
 const BALL_SPEED = 21;
-const RANDOM_EFFECT = 21;
+const HIT_VEL = 10;
 
 // physics things for wall collisions
 const UK = 0.1; // coefficient of kinetic friction
@@ -11,6 +11,12 @@ const M = 1; // mass of ball
 const R = 1.5; // radius of ball
 const ROT_I = (2 / 5) * M * R * R; // rotational intertia of ball
 const COL_TIME = 1 / 30; // time of a collision
+
+// My attempt at fluid dynamics
+const CL = 0.22; // Coefficient of lift
+const CD = 0.47; // Coefficient of drag
+const AIR_DENSE = 1.23; // Air density
+const A = 0.00426; // Cross sectional area
 
 let paddleXV = 0;
 let aiPaddleXV = 0;
@@ -111,6 +117,26 @@ function updateAiPaddle() {
 
 function updateBall() {
 
+    // Some things needed for calculations
+    let v = (ballXV * ballXV) + (ballZV * ballZV);
+    let vDir = Math.atan(ballZV / ballXV) + (Math.PI * (ballXV < 0 ? 1 : 0));
+
+    // Calculate Magnus force and acceleration
+    let Fm = 0.5 * CL * AIR_DENSE * A * v * (Math.sqrt(v) * (ballAV * Math.PI / 180));
+    let FmDir = vDir + (Math.PI / 2 * Math.sign(ballAV));
+
+    // Apply acceleration from Magnus force
+    ballXV += (Fm / M) * Math.cos(FmDir) * timeDelta;
+    ballZV += (Fm / M) * Math.sin(FmDir) * timeDelta;
+
+    // Calculate drag
+    let Fd = 0.5 * AIR_DENSE * v * CD * A;
+
+    // Apply acceleration from drag
+    ballXV -= (Fd / M) * Math.cos(vDir) * Math.sign(ballXV) * timeDelta;
+    ballZV -= (Fd / M) * Math.sin(vDir) * Math.sign(ballZV) * timeDelta;
+
+    // Apply velocity
     ball.position.x += ballXV * timeDelta;
     ball.position.z += ballZV * timeDelta;
     ball.rotation.y += ballAV * timeDelta;
@@ -124,7 +150,7 @@ function updateBall() {
         let fk = (-2 * M * UK * ballZV) / COL_TIME;
         ballAV -= ((-R * fk * COL_TIME) / ROT_I);
         ballXV -= fk * COL_TIME / M;
-        ballZV = -ballZV - Math.random() * RANDOM_EFFECT;
+        ballZV = -ballZV - (HIT_VEL * Math.random());
     }
 
     if (ball.position.z > aiPad.position.z - 3 * 0.5 - 3 * 0.5 
@@ -136,7 +162,7 @@ function updateBall() {
         let fk = (-2 * M * UK * ballZV) / COL_TIME;
         ballAV -= ((-R * fk * COL_TIME) / ROT_I);
         ballXV -= fk * COL_TIME / M;
-        ballZV = -ballZV + Math.random() * RANDOM_EFFECT;
+        ballZV = -ballZV + (HIT_VEL * Math.random());
     }    
 
     if (ball.position.x < -21.5 + 3.45 ) {

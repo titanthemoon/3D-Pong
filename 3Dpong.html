@@ -65,6 +65,8 @@
         camera.position.z = 60;
         camera.position.y = 40;
         camera.rotation.x = 24.5;
+
+        let timeDelta, timeLast;
     </script>
 
     <script src="js/3DpongLight.js"></script>
@@ -78,8 +80,6 @@
     </script>
 
     <script>
-
-        let timeDelta, timeLast;
 
         function animate(timeNow) {
             requestAnimationFrame(animate);
