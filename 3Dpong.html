@@ -78,14 +78,22 @@
     </script>
 
     <script>
-        function animate() {
+
+        let timeDelta, timeLast;
+
+        function animate(timeNow) {
             requestAnimationFrame(animate);
+            if (!timeLast) {
+                timeLast = timeNow;
+            }
+            timeDelta = (timeNow - timeLast) * 0.001;
+            timeLast = timeNow;
 
             render();
             update();
         }
 
-        animate();
+        requestAnimationFrame(animate);
     </script>
     <div class="scoreboard">
         <div style="height: 100%; width: 50%; float: left;">
