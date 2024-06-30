@@ -12,10 +12,10 @@ var entityMaterial = new THREE.MeshLambertMaterial({color: ENTITY_COLOR});
 
 // Geometries
 var floorGeo = new THREE.BoxGeometry(TABLE_W, TABLE_T, TABLE_H);
-var topGeo = new THREE.BoxGeometry(TABLE_W, TABLE_T + TABLE_O, TABLE_B);
-var bottomGeo = new THREE.BoxGeometry(TABLE_W, TABLE_T + TABLE_O, TABLE_B);
-var leftGeo = new THREE.BoxGeometry(TABLE_B, TABLE_T + TABLE_O, TABLE_H + 2 * TABLE_B);
-var rightGeo = new THREE.BoxGeometry(TABLE_B, TABLE_T + TABLE_O, TABLE_H + 2 * TABLE_B);
+var topGeo = new THREE.BoxGeometry(TABLE_W, TABLE_B_T, TABLE_B);
+var bottomGeo = new THREE.BoxGeometry(TABLE_W, TABLE_B_T, TABLE_B);
+var leftGeo = new THREE.BoxGeometry(TABLE_B, TABLE_B_T, TABLE_H + 2 * TABLE_B);
+var rightGeo = new THREE.BoxGeometry(TABLE_B, TABLE_B_T, TABLE_H + 2 * TABLE_B);
 var netGeo = new THREE.BoxGeometry(TABLE_W, NET_T, NET_H);
 var userPadGeo = new THREE.BoxGeometry(PADDLE_W, PADDLE_T, PADDLE_H);
 var aiPadGeo = new THREE.BoxGeometry(PADDLE_W, PADDLE_T, PADDLE_H);
@@ -31,41 +31,49 @@ var net = new THREE.Mesh(netGeo, netMaterial);
 var userPad = new THREE.Mesh(userPadGeo, entityMaterial);
 var aiPad = new THREE.Mesh(aiPadGeo, entityMaterial);
 var ball = new THREE.Mesh(ballGeo, entityMaterial);
+
 // Positions
-// floor
-floor.position.y = -2.5;
+{
+    // offsets used multiple times
+    let borderOffest = TABLE_Y_D + (TABLE_T / 2) + (TABLE_B_T / 2);
+    let paddleOffset = TABLE_Y_D + (TABLE_T / 2) + (PADDLE_T / 2);
 
-// top border
-topWall.position.z = -31.5;
-topWall.position.y = -0.5;
+    // floor
+    floor.position.y = TABLE_Y_D;
 
-// bottom border
-bottomWall.position.z = 31.5;
-bottomWall.position.y = -0.5;
+    // top border
+    topWall.position.y = borderOffest;
+    topWall.position.z = -((TABLE_H / 2) + (TABLE_B / 2));
 
-// left border
-leftWall.position.y = -0.5;
-leftWall.position.x = -21.5;
+    // bottom border
+    bottomWall.position.y = borderOffest;
+    bottomWall.position.z = ((TABLE_H / 2) + (TABLE_B / 2));
 
-// right border
-rightWall.position.y = -0.5;
-rightWall.position.x = 21.5;
+    // left border
+    leftWall.position.x = -((TABLE_W / 2) + (TABLE_B / 2));
+    leftWall.position.y = borderOffest;
 
-// net
-net.position.y = -2;
+    // right border
+    rightWall.position.x = ((TABLE_W / 2) + (TABLE_B / 2));
+    rightWall.position.y = borderOffest;
 
-// player paddle
-userPad.position.y = -0.5;
-userPad.position.z = 27.5;
+    // net
+    net.position.y = TABLE_Y_D + (TABLE_T / 2);
 
-// ai paddle
-aiPad.position.y = -0.5;
-aiPad.position.z = -27.5;
+    // player paddle
+    userPad.position.y = paddleOffset;
+    userPad.position.z = PADDLE_Z_D;
 
-// ball
-ball.position.x = 0;
-ball.position.z = 0;
-ball.rotation.y = 0;
+    // ai paddle
+    aiPad.position.y = paddleOffset;
+    aiPad.position.z = -PADDLE_Z_D;
+
+    // ball
+    ball.position.x = 0;
+    ball.position.y = TABLE_Y_D + (TABLE_T / 2) + (BALL_W / 2);
+    ball.position.z = 0;
+    ball.rotation.y = 0;
+}
 
 // Adding to the scene
 scene.add(floor);
