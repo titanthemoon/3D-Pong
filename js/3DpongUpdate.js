@@ -159,16 +159,16 @@ function updateBall() {
         ballZV = -ballZV + (HIT_VEL * Math.random());
     }    
 
-    if (ball.position.x < -21.5 + 3.45 ) {
+    if (ball.position.x < -(TABLE_W / 2) + (BALL_W / 2)) {
         let fk = (-2 * M * UK * ballXV) / COL_TIME;
-        ball.position.x = -21.5 + 3.46;
+        ball.position.x = -(TABLE_W / 2) + (BALL_W / 2);
         ballXV = -ballXV;
         ballAV -= ((-R * fk * COL_TIME) / ROT_I);
         ballZV -= fk * COL_TIME / M;
         
-    } else if (ball.position.x > 21.5 - 3.45 ) {
+    } else if (ball.position.x > (TABLE_W / 2) - (BALL_W / 2)) {
         let fk = (-2 * M * UK * ballXV) / COL_TIME;
-        ball.position.x = 21.5 - 3.46;
+        ball.position.x = (TABLE_W / 2) - (BALL_W / 2);
         ballXV = -ballXV;
         ballAV -= ((-R * fk * COL_TIME) / ROT_I);
         ballZV -= fk * COL_TIME / M;
