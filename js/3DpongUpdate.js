@@ -110,7 +110,7 @@ function updateAiPaddle() {
 }
 
 function updateBall() {
-    
+
     // Some things needed for calculations
     let v = (ballXV * ballXV) + (ballZV * ballZV);
     let vDir = Math.atan(ballZV / ballXV) + (Math.PI * (ballXV < 0 ? 1 : 0));
@@ -189,11 +189,6 @@ function updateBall() {
     }
 }
 
-function applyBALL_SPEED(angle) {
-    ballXV = BALL_SPEED * Math.cos(angle);
-    ballYV = -BALL_SPEED * Math.sin(angle);
-}
-
 function newBall() {
     ballXV = BALL_SPEED;
     ballZV = BALL_SPEED;
@@ -227,9 +222,4 @@ function newGame() {
     userPad.position.x = 0;
     aiPad.position.x = 0;
     newBall();
-}
-
-function move (x, z) {
-    aiPad.position.x += x;
-    aiPad.position.z += z;
 }
