@@ -110,7 +110,7 @@ function updateAiPaddle() {
 }
 
 function updateBall() {
-
+    
     // Some things needed for calculations
     let v = (ballXV * ballXV) + (ballZV * ballZV);
     let vDir = Math.atan(ballZV / ballXV) + (Math.PI * (ballXV < 0 ? 1 : 0));
@@ -135,10 +135,9 @@ function updateBall() {
     ball.position.z += ballZV * timeDelta;
     ball.rotation.y += ballAV * timeDelta;
 
-    if (ball.position.z > userPad.position.z - 3 * 0.5 - 3 * 0.5 
-        && ball.position.z < userPad.position.z + 3 * 0.5
-        && ball.position.x > userPad.position.x - 9 * 0.5 - 3 * 0.5
-        && ball.position.x < userPad.position.x + 9 * 0.5 + 3 * 0.5
+    if (ball.position.z + (BALL_W / 2) > userPad.position.z - (PADDLE_H / 2) 
+        && ball.position.x - (BALL_W / 2) < userPad.position.x + (PADDLE_W / 2)
+        && ball.position.x + (BALL_W / 2) > userPad.position.x - (PADDLE_W / 2)
     ) {
         ball.position.z = userPad.position.z - 3;
         let fk = (-2 * M * UK * ballZV) / COL_TIME;
@@ -147,10 +146,9 @@ function updateBall() {
         ballZV = -ballZV - (HIT_VEL * Math.random());
     }
 
-    if (ball.position.z > aiPad.position.z - 3 * 0.5 - 3 * 0.5 
-        && ball.position.z < aiPad.position.z + 3 * 0.5
-        && ball.position.x > aiPad.position.x - 9 * 0.5 - 3 * 0.5
-        && ball.position.x < aiPad.position.x + 9 * 0.5 + 3 * 0.5
+    if (ball.position.z - (BALL_W / 2) < aiPad.position.z + (PADDLE_H / 2) 
+        && ball.position.x - (BALL_W / 2) < aiPad.position.x + (PADDLE_W / 2)
+        && ball.position.x + (BALL_W / 2) > aiPad.position.x - (PADDLE_W / 2)
     ) {
         ball.position.z = aiPad.position.z + 3;
         let fk = (-2 * M * UK * ballZV) / COL_TIME;
