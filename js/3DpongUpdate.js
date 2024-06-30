@@ -31,12 +31,6 @@ let win = false;
 let lose = false;
 let paused = false;
 
-const Direction = {
-    LEFT: 0,
-    RIGHT: 1,
-    STOP: 2
-}
-
 document.addEventListener('keydown', keyDown);
 document.addEventListener('keyup', keyUp);
 
@@ -92,10 +86,10 @@ function updateUserPaddle() {
 
     userPad.position.x += paddleXV;
 
-    if (userPad.position.x < -21.5 + 5.6) {
-        userPad.position.x = -21.5 + 5.6;
-    } else if (userPad.position.x > 21.5 - 5.6) {
-       userPad.position.x = 21.5 - 5.6;
+    if (userPad.position.x < -(TABLE_W / 2) + (PADDLE_W / 2)) {
+        userPad.position.x = -(TABLE_W / 2) + (PADDLE_W / 2);
+    } else if (userPad.position.x > (TABLE_W / 2) - (PADDLE_W / 2)) {
+       userPad.position.x = (TABLE_W / 2) - (PADDLE_W / 2);
     }
 }
 
@@ -108,10 +102,10 @@ function updateAiPaddle() {
         aiPaddleXV = 0;
     }
     aiPad.position.x += aiPaddleXV;
-    if (aiPad.position.x < -21.5 + 5.6) {
-        aiPad.position.x = -21.5 + 5.6;
-    } else if (aiPad.position.x > 21.5 - 5.6) {
-        aiPad.position.x = 21.5 - 5.6;
+    if (aiPad.position.x < -(TABLE_W / 2) + (PADDLE_W / 2)) {
+        aiPad.position.x = -(TABLE_W / 2) + (PADDLE_W / 2);
+    } else if (aiPad.position.x > (TABLE_W / 2) - (PADDLE_W / 2)) {
+        aiPad.position.x = (TABLE_W / 2) - (PADDLE_W / 2);
     }
 }
 
