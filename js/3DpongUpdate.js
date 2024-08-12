@@ -1,8 +1,9 @@
 const MIN_BOUNCE_ANGLE = 30;
 const BALL_SPIN = 2;
-const PADDLE_SPEED = 42;
-const AI_PADDLE_SPEED = 30;
+let PADDLE_SPEED = 40; // I know this is kind of disgusting
+const AI_PADDLE_SPEED = 50;
 const BALL_SPEED = 21;
+const SIDE_VEL = 10;
 const HIT_VEL = 10;
 
 // physics things for wall collisions
@@ -31,12 +32,6 @@ let win = false;
 let lose = false;
 let paused = false;
 
-const Direction = {
-    LEFT: 0,
-    RIGHT: 1,
-    STOP: 2
-}
-
 document.addEventListener('keydown', keyDown);
 document.addEventListener('keyup', keyUp);
 
@@ -53,13 +48,15 @@ function update() {
 function keyDown(/** @type {keyboardEvent} */ ev) {
     switch (ev.keyCode) {
         case 37:
+        case 65:
             paddleLeft = true;
             break;
         case 39:
+        case 68:
             paddleRight = true;
             break;
         case 32:
-            if ( win || lose ) {
+            if (win || lose) {
                 newGame();
             }
             break;
@@ -72,10 +69,24 @@ function keyDown(/** @type {keyboardEvent} */ ev) {
 function keyUp(/** @type {keyboardEvent} */ ev) {
     switch (ev.keyCode) {
         case 37:
+        case 65:
             paddleLeft = false;
             break;
         case 39:
+        case 68:
             paddleRight = false;
+            break;
+        case 38:
+        case 87:
+            if (PADDLE_SPEED < 80) {
+                PADDLE_SPEED += 10;
+            }
+            break;
+        case 40:
+        case 83:
+            if (PADDLE_SPEED > 40) {
+                PADDLE_SPEED -= 10;
+            }
             break;
     }
 }
@@ -92,10 +103,10 @@ function updateUserPaddle() {
 
     userPad.position.x += paddleXV;
 
-    if (userPad.position.x < -21.5 + 5.6) {
-        userPad.position.x = -21.5 + 5.6;
-    } else if (userPad.position.x > 21.5 - 5.6) {
-       userPad.position.x = 21.5 - 5.6;
+    if (userPad.position.x < -(TABLE_W / 2) + (PADDLE_W / 2)) {
+        userPad.position.x = -(TABLE_W / 2) + (PADDLE_W / 2);
+    } else if (userPad.position.x > (TABLE_W / 2) - (PADDLE_W / 2)) {
+       userPad.position.x = (TABLE_W / 2) - (PADDLE_W / 2);
     }
 }
 
@@ -108,14 +119,54 @@ function updateAiPaddle() {
         aiPaddleXV = 0;
     }
     aiPad.position.x += aiPaddleXV;
-    if (aiPad.position.x < -21.5 + 5.6) {
-        aiPad.position.x = -21.5 + 5.6;
-    } else if (aiPad.position.x > 21.5 - 5.6) {
-        aiPad.position.x = 21.5 - 5.6;
+    if (aiPad.position.x < -(TABLE_W / 2) + (PADDLE_W / 2)) {
+        aiPad.position.x = -(TABLE_W / 2) + (PADDLE_W / 2);
+    } else if (aiPad.position.x > (TABLE_W / 2) - (PADDLE_W / 2)) {
+        aiPad.position.x = (TABLE_W / 2) - (PADDLE_W / 2);
+    }
+}
+
+function ballVelocityCurve(vel) {
+
+    vel = Math.abs(vel);
+
+    let threshold1 = 0.01;
+    let threshold2 = 0.10;
+    let threshold3 = 0.99;
+
+    if (vel <= 50) {
+        return threshold1;
+    } else if (vel <= 100) {
+        return ((threshold2 - threshold1) / (50 * 50) * ((vel - 50) * (vel - 50)) + threshold1);
+    } else if (vel <= 130) {
+        return ((threshold3 - threshold2) / (30 * 30) * ((vel - 100) * (vel - 100)) + threshold2);
+    } else {
+        return threshold3;
+    }
+}
+
+function ballAngVelocityCurve(vel) {
+
+    vel = Math.abs(vel);
+
+    let threshold1 = 0.01;
+    let threshold2 = 0.50;
+    let threshold3 = 0.99;
+
+    if (vel <= 30) {
+        return threshold1;
+    } else if (vel <= 60) {
+        return ((threshold2 - threshold1) / (30 * 30) * ((vel - 30) * (vel - 30)) + threshold1);
+    } else if (vel <= 90) {
+        return ((threshold3 - threshold2) / (30 * 30) * ((vel - 60) * (vel - 60)) + threshold2);
+    } else {
+        return threshold3;
     }
 }
 
 function updateBall() {
+
+    console.log(ballZV);
 
     // Some things needed for calculations
     let v = (ballXV * ballXV) + (ballZV * ballZV);
@@ -125,56 +176,61 @@ function updateBall() {
     let Fm = 0.5 * CL * AIR_DENSE * A * v * (Math.sqrt(v) * (ballAV * Math.PI / 180));
     let FmDir = vDir + (Math.PI / 2 * Math.sign(ballAV));
 
+    // Apply Threshold for Maximum Magnus Force
+    if (Math.abs(Fm) > 90) {
+        Fm = Math.sign(Fm) * 90;
+    }
+
     // Apply acceleration from Magnus force
     ballXV += (Fm / M) * Math.cos(FmDir) * timeDelta;
     ballZV += (Fm / M) * Math.sin(FmDir) * timeDelta;
 
-    // Calculate drag
-    let Fd = 0.5 * AIR_DENSE * v * CD * A;
-
     // Apply acceleration from drag
-    ballXV -= (Fd / M) * Math.cos(vDir) * Math.sign(ballXV) * timeDelta;
-    ballZV -= (Fd / M) * Math.sin(vDir) * Math.sign(ballZV) * timeDelta;
+    ballXV -= ballXV * ballVelocityCurve(ballXV) * timeDelta;
+    ballZV -= ballZV * ballVelocityCurve(ballZV) * timeDelta;
+
+    // Calculate conservation of energy to reduce spin
+    ballAV -= ballAV * ballAngVelocityCurve(ballAV) * timeDelta;
 
     // Apply velocity
     ball.position.x += ballXV * timeDelta;
     ball.position.z += ballZV * timeDelta;
     ball.rotation.y += ballAV * timeDelta;
 
-    if (ball.position.z > userPad.position.z - 3 * 0.5 - 3 * 0.5 
-        && ball.position.z < userPad.position.z + 3 * 0.5
-        && ball.position.x > userPad.position.x - 9 * 0.5 - 3 * 0.5
-        && ball.position.x < userPad.position.x + 9 * 0.5 + 3 * 0.5
+    if (ball.position.z + (BALL_W / 2) > userPad.position.z - (PADDLE_H / 2) 
+        && ball.position.x - (BALL_W / 2) < userPad.position.x + (PADDLE_W / 2)
+        && ball.position.x + (BALL_W / 2) > userPad.position.x - (PADDLE_W / 2)
     ) {
         ball.position.z = userPad.position.z - 3;
         let fk = (-2 * M * UK * ballZV) / COL_TIME;
         ballAV -= ((-R * fk * COL_TIME) / ROT_I);
         ballXV -= fk * COL_TIME / M;
-        ballZV = -ballZV - (HIT_VEL * Math.random());
+        ballXV -= Math.sign(ballXV) * paddleXV * SIDE_VEL;
+        ballZV = -ballZV - (HIT_VEL * Math.abs(paddleXV));
     }
 
-    if (ball.position.z > aiPad.position.z - 3 * 0.5 - 3 * 0.5 
-        && ball.position.z < aiPad.position.z + 3 * 0.5
-        && ball.position.x > aiPad.position.x - 9 * 0.5 - 3 * 0.5
-        && ball.position.x < aiPad.position.x + 9 * 0.5 + 3 * 0.5
+    if (ball.position.z - (BALL_W / 2) < aiPad.position.z + (PADDLE_H / 2) 
+        && ball.position.x - (BALL_W / 2) < aiPad.position.x + (PADDLE_W / 2)
+        && ball.position.x + (BALL_W / 2) > aiPad.position.x - (PADDLE_W / 2)
     ) {
         ball.position.z = aiPad.position.z + 3;
         let fk = (-2 * M * UK * ballZV) / COL_TIME;
         ballAV -= ((-R * fk * COL_TIME) / ROT_I);
         ballXV -= fk * COL_TIME / M;
-        ballZV = -ballZV + (HIT_VEL * Math.random());
+        ballXV -= Math.sign(ballXV) * aiPaddleXV * SIDE_VEL;
+        ballZV = -ballZV + (HIT_VEL * Math.abs(aiPaddleXV));
     }    
 
-    if (ball.position.x < -21.5 + 3.45 ) {
+    if (ball.position.x < -(TABLE_W / 2) + (BALL_W / 2)) {
         let fk = (-2 * M * UK * ballXV) / COL_TIME;
-        ball.position.x = -21.5 + 3.46;
+        ball.position.x = -(TABLE_W / 2) + (BALL_W / 2);
         ballXV = -ballXV;
         ballAV -= ((-R * fk * COL_TIME) / ROT_I);
         ballZV -= fk * COL_TIME / M;
         
-    } else if (ball.position.x > 21.5 - 3.45 ) {
+    } else if (ball.position.x > (TABLE_W / 2) - (BALL_W / 2)) {
         let fk = (-2 * M * UK * ballXV) / COL_TIME;
-        ball.position.x = 21.5 - 3.46;
+        ball.position.x = (TABLE_W / 2) - (BALL_W / 2);
         ballXV = -ballXV;
         ballAV -= ((-R * fk * COL_TIME) / ROT_I);
         ballZV -= fk * COL_TIME / M;
@@ -195,11 +251,6 @@ function updateBall() {
             newBall();
         }
     }
-}
-
-function applyBALL_SPEED(angle) {
-    ballXV = BALL_SPEED * Math.cos(angle);
-    ballYV = -BALL_SPEED * Math.sin(angle);
 }
 
 function newBall() {
@@ -235,9 +286,4 @@ function newGame() {
     userPad.position.x = 0;
     aiPad.position.x = 0;
     newBall();
-}
-
-function move (x, z) {
-    aiPad.position.x += x;
-    aiPad.position.z += z;
 }

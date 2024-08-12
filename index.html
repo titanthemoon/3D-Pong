@@ -6,7 +6,8 @@
     <title>THREEJS PONG</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
     <style>
         body {
             margin: 0;
@@ -69,6 +70,7 @@
         let timeDelta, timeLast;
     </script>
 
+    <script src="js/3DpongConstants.js"></script>
     <script src="js/3DpongLight.js"></script>
     <script src="js/3DpongUpdate.js"></script>
     <script src="js/3DpongDraw.js"></script>
@@ -76,10 +78,7 @@
     <script>
         function render() {
             renderer.render(scene, camera);
-        } 
-    </script>
-
-    <script>
+        }
 
         function animate(timeNow) {
             requestAnimationFrame(animate);
