@@ -166,8 +166,6 @@ function ballAngVelocityCurve(vel) {
 
 function updateBall() {
 
-    console.log(ballZV);
-
     // Some things needed for calculations
     let v = (ballXV * ballXV) + (ballZV * ballZV);
     let vDir = Math.atan(ballZV / ballXV) + (Math.PI * (ballXV < 0 ? 1 : 0));
@@ -238,15 +236,11 @@ function updateBall() {
 
     if (ball.position.z > 29.5 ) {
         aiScore++;
-        document.getElementById("AIScore").innerHTML = aiScore;
-        document.getElementById("PlayerScore").innerHTML = userScore;
         if (!win && !lose) {
             newBall();
         }
     } else if (ball.position.z < -29.5) {
         userScore++;
-        document.getElementById("AIScore").innerHTML = aiScore;
-        document.getElementById("PlayerScore").innerHTML = userScore;
         if (!win && !lose) {
             newBall();
         }
@@ -254,6 +248,10 @@ function updateBall() {
 }
 
 function newBall() {
+
+    document.getElementById("AIScore").innerHTML = aiScore;
+    document.getElementById("PlayerScore").innerHTML = userScore;
+
     ballXV = BALL_SPEED;
     ballZV = BALL_SPEED;
     ballAV = 0;
@@ -275,10 +273,13 @@ function updateLose() {
         ballXV = 0;
         ballYV = 0;
         lose = true;
+        document.getElementById("PlayerLose").style.visibility = "visible";
     }
 }
 
 function newGame() {
+    document.getElementById("PlayerWin").style.visibility = "hidden";
+    document.getElementById("PlayerLose").style.visibility = "hidden";
     win = false;
     lose = false;
     aiScore = 0;
