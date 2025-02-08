@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="159mm"
+   height="51mm"
+   viewBox="0 0 159 51"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   sodipodi:docname="controls.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:lockguides="true"
+     inkscape:zoom="2.1089995"
+     inkscape:cx="287.57711"
+     inkscape:cy="73.494563"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#4d4d4d;stroke-width:0.289008"
+       id="rect111-9"
+       width="25"
+       height="25"
+       x="26"
+       y="0"
+       ry="3.003876" />
+    <rect
+       style="fill:#4d4d4d;stroke-width:0.289008"
+       id="rect111-3"
+       width="25"
+       height="25"
+       x="52"
+       y="26"
+       ry="3.003876" />
+    <rect
+       style="fill:#4d4d4d;stroke-width:0.289008"
+       id="rect111-5"
+       width="25"
+       height="25"
+       x="26"
+       y="26"
+       ry="3.003876" />
+    <rect
+       style="fill:#4d4d4d;stroke-width:0.289008"
+       id="rect111-1"
+       width="25"
+       height="25"
+       x="0"
+       y="26"
+       ry="3.003876" />
+    <rect
+       style="fill:#4d4d4d;stroke-width:0.289008"
+       id="rect111-9-5"
+       width="25"
+       height="25"
+       x="108"
+       y="0"
+       ry="3.003876" />
+    <rect
+       style="fill:#4d4d4d;stroke-width:0.289008"
+       id="rect111-3-8"
+       width="25"
+       height="25"
+       x="134"
+       y="26"
+       ry="3.003876" />
+    <rect
+       style="fill:#4d4d4d;stroke-width:0.289008"
+       id="rect111-5-1"
+       width="25"
+       height="25"
+       x="108"
+       y="26"
+       ry="3.003876" />
+    <rect
+       style="fill:#4d4d4d;stroke-width:0.289008"
+       id="rect111-1-1"
+       width="25"
+       height="25"
+       x="82"
+       y="26"
+       ry="3.003876" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.1114px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono';fill:#ffffff;stroke-width:0.264588"
+       x="34.265896"
+       y="17.650883"
+       id="text459"
+       transform="scale(1.0000178,0.99998221)"><tspan
+         sodipodi:role="line"
+         id="tspan457"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.1114px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono';stroke-width:0.264588"
+         x="34.265896"
+         y="17.650883">W</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.1111px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono';fill:#ffffff;stroke-width:0.264583"
+       x="8.2666702"
+       y="43.650551"
+       id="text459-8"><tspan
+         sodipodi:role="line"
+         id="tspan457-1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.1111px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono';stroke-width:0.264583"
+         x="8.2666702"
+         y="43.650551">A</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.1111px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono';fill:#ffffff;stroke-width:0.264583"
+       x="34.26667"
+       y="43.650551"
+       id="text490"><tspan
+         sodipodi:role="line"
+         id="tspan488"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono';stroke-width:0.264583"
+         x="34.26667"
+         y="43.650551">S</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.1111px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono';fill:#ffffff;stroke-width:0.264583"
+       x="60.238449"
+       y="43.650551"
+       id="text494"><tspan
+         sodipodi:role="line"
+         id="tspan492"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono';stroke-width:0.264583"
+         x="60.238449"
+         y="43.650551">D</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.1111px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono';fill:#ffffff;stroke-width:0.264583"
+       x="116.26667"
+       y="17.721107"
+       id="text587"><tspan
+         sodipodi:role="line"
+         id="tspan585"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono';fill:#ffffff;stroke-width:0.264583"
+         x="116.26667"
+         y="17.721107">↑</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.1111px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono';fill:#ffffff;stroke-width:0.264583"
+       x="116.26667"
+       y="43.579994"
+       id="text641"><tspan
+         sodipodi:role="line"
+         id="tspan639"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono';fill:#ffffff;stroke-width:0.264583"
+         x="116.26667"
+         y="43.579994">↓</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.1111px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono';fill:#ffffff;stroke-width:0.264583"
+       x="142.19612"
+       y="43.156662"
+       id="text645"><tspan
+         sodipodi:role="line"
+         id="tspan643"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono';fill:#ffffff;stroke-width:0.264583"
+         x="142.19612"
+         y="43.156662">→</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.1111px;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono';fill:#ffffff;stroke-width:0.264583"
+       x="90.337227"
+       y="43.156662"
+       id="text649"><tspan
+         sodipodi:role="line"
+         id="tspan647"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'JetBrains Mono';-inkscape-font-specification:'JetBrains Mono';fill:#ffffff;stroke-width:0.264583"
+         x="90.337227"
+         y="43.156662">←</tspan></text>
+  </g>
+</svg>
