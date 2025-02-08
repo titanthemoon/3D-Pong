@@ -265,7 +265,7 @@ function updateWin() {
         ballXV = 0;
         ballYV = 0;
         win = true;
-        document.getElementById("PlayerLose").style.visibility = "visible";
+        document.getElementById("PlayerWin").style.visibility = "visible";
     }
 }
 
