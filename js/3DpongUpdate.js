@@ -36,8 +36,7 @@ document.addEventListener('keydown', keyDown);
 document.addEventListener('keyup', keyUp);
 
 function update() {
-    updateWin();
-    updateLose();
+    updateEnd();
     if (!win && !lose && !paused) {
         updateUserPaddle();
         updateAiPaddle();
@@ -175,9 +174,7 @@ function updateBall() {
     let FmDir = vDir + (Math.PI / 2 * Math.sign(ballAV));
 
     // Apply Threshold for Maximum Magnus Force
-    if (Math.abs(Fm) > 90) {
-        Fm = Math.sign(Fm) * 90;
-    }
+    Fm = Fm.clamp(-90, 90);
 
     // Apply acceleration from Magnus force
     ballXV += (Fm / M) * Math.cos(FmDir) * timeDelta;
@@ -196,6 +193,7 @@ function updateBall() {
     ball.rotation.y += ballAV * timeDelta;
 
     if (ball.position.z + (BALL_W / 2) > userPad.position.z - (PADDLE_H / 2) 
+        && ball.position.z - (BALL_W / 2) < userPad.position.z + (PADDLE_H / 2)
         && ball.position.x - (BALL_W / 2) < userPad.position.x + (PADDLE_W / 2)
         && ball.position.x + (BALL_W / 2) > userPad.position.x - (PADDLE_W / 2)
     ) {
@@ -208,6 +206,7 @@ function updateBall() {
     }
 
     if (ball.position.z - (BALL_W / 2) < aiPad.position.z + (PADDLE_H / 2) 
+        && ball.position.z + (BALL_W / 2) > aiPad.position.z - (PADDLE_H / 2)
         && ball.position.x - (BALL_W / 2) < aiPad.position.x + (PADDLE_W / 2)
         && ball.position.x + (BALL_W / 2) > aiPad.position.x - (PADDLE_W / 2)
     ) {
@@ -234,12 +233,12 @@ function updateBall() {
         ballZV -= fk * COL_TIME / M;
     }
 
-    if (ball.position.z > 29.5 ) {
+    if (ball.position.z > GOAL_H ) {
         aiScore++;
         if (!win && !lose) {
             newBall();
         }
-    } else if (ball.position.z < -29.5) {
+    } else if (ball.position.z < -GOAL_H) {
         userScore++;
         if (!win && !lose) {
             newBall();
@@ -260,20 +259,19 @@ function newBall() {
     ball.position.x = 0;
 }
 
-function updateWin() {
+function updateEnd() {
     if (userScore >= 7 && Math.abs(aiScore - userScore) >= 2) {
-        ballXV = 0;
-        ballYV = 0;
         win = true;
-        document.getElementById("PlayerLose").style.visibility = "visible";
-    }
-}
-
-function updateLose() {
-    if (aiScore >= 7 && Math.abs(aiScore - userScore) >= 2) {
         ballXV = 0;
         ballYV = 0;
+        ballAV = 0;
+        document.getElementById("PlayerWin").style.visibility = "visible";
+    }
+    if (aiScore >= 7 && Math.abs(aiScore - userScore) >= 2) {
         lose = true;
+        ballXV = 0;
+        ballYV = 0;
+        ballAV = 0;
         document.getElementById("PlayerLose").style.visibility = "visible";
     }
 }
