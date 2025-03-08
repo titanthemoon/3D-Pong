@@ -4,3 +4,6 @@ scene.add( light );
 
 var hemiHelper = new THREE.HemisphereLightHelper( light, 30 );
 //scene.add( hemiHelper );
+var hitLight = new THREE.PointLight( 0xFFFFFF, 0, 0);
+hitLight.position.set( 0, 10, 0 );
+scene.add( hitLight );

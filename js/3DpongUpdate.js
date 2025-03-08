@@ -19,6 +19,12 @@ const CD = 0.47; // Coefficient of drag
 const AIR_DENSE = 1.23; // Air density
 const A = 0.00426; // Cross sectional area
 
+const HIT_CAP = 3;
+const HIT_DELAY_TIME = 70;
+const HIT_MULTIPLIER = 5;
+const HIT_ADD = 0;
+const HIT_PAUSE_TIME = 20;
+
 let paddleXV = 0;
 let aiPaddleXV = 0;
 let paddleLeft = false;
@@ -32,15 +38,42 @@ let win = false;
 let lose = false;
 let paused = false;
 
+let hitFrame = 0;
+let hitDelay = 0;
+let hit = false;
+let hitPause = 0;
+
 document.addEventListener('keydown', keyDown);
 document.addEventListener('keyup', keyUp);
 
 function update() {
     updateEnd();
-    if (!win && !lose && !paused) {
+    hitPause--;
+    if (!win && !lose && !paused && hitPause <= 0) {
         updateUserPaddle();
+        // hitting
+        if (hitFrame > 0) {
+            if (hitFrame > HIT_CAP) {
+                hitDelay = HIT_DELAY_TIME;
+                hitFrame = 0;
+            } else {
+                hitFrame++;
+            }
+        }
+        if (hitDelay > 0) {
+            hitDelay--;
+            
+        }
+
         updateAiPaddle();
         updateBall();
+
+        if (hit) {
+            hitLight.intensity = 5;
+            hit = false;
+        } else {
+            hitLight.intensity = 0;
+        }
     }
 }
 
@@ -55,8 +88,8 @@ function keyDown(/** @type {keyboardEvent} */ ev) {
             paddleRight = true;
             break;
         case 32:
-            if (win || lose) {
-                newGame();
+            if (hitDelay == 0) {
+                hitFrame = 1;
             }
             break;
         case 80:
@@ -203,6 +236,21 @@ function updateBall() {
         ballXV -= fk * COL_TIME / M;
         ballXV -= Math.sign(ballXV) * paddleXV * SIDE_VEL;
         ballZV = -ballZV - (HIT_VEL * Math.abs(paddleXV));
+
+        // hitting
+        if (hitFrame > 0) {
+            hitPause = HIT_PAUSE_TIME;
+            hit = true;
+
+            ballAV *= HIT_MULTIPLIER;
+            ballXV *= HIT_MULTIPLIER;
+            ballZV *= HIT_MULTIPLIER;
+
+            ballAV += HIT_ADD;
+            ballXV += HIT_ADD;
+            ballZV += HIT_ADD;
+        }
+
     }
 
     if (ball.position.z - (BALL_W / 2) < aiPad.position.z + (PADDLE_H / 2) 
