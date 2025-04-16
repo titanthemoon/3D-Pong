@@ -19,6 +19,12 @@ const CD = 0.47; // Coefficient of drag
 const AIR_DENSE = 1.23; // Air density
 const A = 0.00426; // Cross sectional area
 
+const HIT_CAP = 2;
+const HIT_DELAY_TIME = 70;
+const HIT_MULTIPLIER = 5;
+const HIT_ADD = 0;
+const HIT_PAUSE_TIME = 20;
+
 let paddleXV = 0;
 let aiPaddleXV = 0;
 let paddleLeft = false;
@@ -32,16 +38,47 @@ let win = false;
 let lose = false;
 let paused = false;
 
+let hitFrame = 0;
+let hitDelay = 0;
+let hit = false;
+let hitPause = 0;
+
 document.addEventListener('keydown', keyDown);
 document.addEventListener('keyup', keyUp);
 
 function update() {
-    updateWin();
-    updateLose();
-    if (!win && !lose && !paused) {
+    updateEnd();
+    hitPause--;
+    if (!win && !lose && !paused && hitPause <= 0) {
         updateUserPaddle();
+        // hitting
+        let hitMeter = document.getElementById("HitMeter1");
+        if (hitFrame > 0) {
+            hitMeter.style.backgroundColor = "#00BBFF"
+            if (hitFrame > HIT_CAP) {
+                hitDelay = HIT_DELAY_TIME;
+                hitFrame = 0;
+            } else {
+                hitFrame++;
+            }
+        }
+        if (hitDelay > 0) {
+            hitDelay--;
+            
+        }
+
+        // Update Hit Meter
+        if (hitFrame == 0) {
+            let hitWidth = (100 * (1 - (hitDelay / HIT_DELAY_TIME))).toString() + "%";
+            let hitColor = "#" + linColorInterp("FC0324", "5EFC03", 1- hitDelay / HIT_DELAY_TIME);
+            hitMeter.style.width = hitWidth;
+            hitMeter.style.backgroundColor = hitColor;
+        }
+
         updateAiPaddle();
         updateBall();
+        
+
     }
 }
 
@@ -56,8 +93,8 @@ function keyDown(/** @type {keyboardEvent} */ ev) {
             paddleRight = true;
             break;
         case 32:
-            if (win || lose) {
-                newGame();
+            if (hitDelay == 0) {
+                hitFrame = 1;
             }
             break;
         case 80:
@@ -175,9 +212,7 @@ function updateBall() {
     let FmDir = vDir + (Math.PI / 2 * Math.sign(ballAV));
 
     // Apply Threshold for Maximum Magnus Force
-    if (Math.abs(Fm) > 90) {
-        Fm = Math.sign(Fm) * 90;
-    }
+    Fm = Fm.clamp(-90, 90);
 
     // Apply acceleration from Magnus force
     ballXV += (Fm / M) * Math.cos(FmDir) * timeDelta;
@@ -196,6 +231,7 @@ function updateBall() {
     ball.rotation.y += ballAV * timeDelta;
 
     if (ball.position.z + (BALL_W / 2) > userPad.position.z - (PADDLE_H / 2) 
+        && ball.position.z - (BALL_W / 2) < userPad.position.z + (PADDLE_H / 2)
         && ball.position.x - (BALL_W / 2) < userPad.position.x + (PADDLE_W / 2)
         && ball.position.x + (BALL_W / 2) > userPad.position.x - (PADDLE_W / 2)
     ) {
@@ -205,9 +241,25 @@ function updateBall() {
         ballXV -= fk * COL_TIME / M;
         ballXV -= Math.sign(ballXV) * paddleXV * SIDE_VEL;
         ballZV = -ballZV - (HIT_VEL * Math.abs(paddleXV));
+
+        // hitting
+        if (hitFrame > 0) {
+            hitPause = HIT_PAUSE_TIME;
+            hit = true;
+
+            ballAV *= HIT_MULTIPLIER;
+            ballXV *= HIT_MULTIPLIER;
+            ballZV *= HIT_MULTIPLIER;
+
+            ballAV += HIT_ADD;
+            ballXV += HIT_ADD;
+            ballZV += HIT_ADD;
+        }
+
     }
 
     if (ball.position.z - (BALL_W / 2) < aiPad.position.z + (PADDLE_H / 2) 
+        && ball.position.z + (BALL_W / 2) > aiPad.position.z - (PADDLE_H / 2)
         && ball.position.x - (BALL_W / 2) < aiPad.position.x + (PADDLE_W / 2)
         && ball.position.x + (BALL_W / 2) > aiPad.position.x - (PADDLE_W / 2)
     ) {
@@ -234,12 +286,12 @@ function updateBall() {
         ballZV -= fk * COL_TIME / M;
     }
 
-    if (ball.position.z > 29.5 ) {
+    if (ball.position.z > GOAL_H ) {
         aiScore++;
         if (!win && !lose) {
             newBall();
         }
-    } else if (ball.position.z < -29.5) {
+    } else if (ball.position.z < -GOAL_H) {
         userScore++;
         if (!win && !lose) {
             newBall();
@@ -260,20 +312,19 @@ function newBall() {
     ball.position.x = 0;
 }
 
-function updateWin() {
+function updateEnd() {
     if (userScore >= 7 && Math.abs(aiScore - userScore) >= 2) {
+        win = true;
         ballXV = 0;
         ballYV = 0;
-        win = true;
+        ballAV = 0;
         document.getElementById("PlayerWin").style.visibility = "visible";
     }
-}
-
-function updateLose() {
     if (aiScore >= 7 && Math.abs(aiScore - userScore) >= 2) {
+        lose = true;
         ballXV = 0;
         ballYV = 0;
-        lose = true;
+        ballAV = 0;
         document.getElementById("PlayerLose").style.visibility = "visible";
     }
 }
