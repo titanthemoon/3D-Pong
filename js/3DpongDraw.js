@@ -9,6 +9,7 @@ var floorMaterial = new THREE.MeshLambertMaterial({color: FLOOR_COLOR});
 var wallMaterial = new THREE.MeshLambertMaterial({color: WALL_COLOR});
 var netMaterial = new THREE.MeshLambertMaterial({color: NET_COLOR});
 var entityMaterial = new THREE.MeshLambertMaterial({color: ENTITY_COLOR});
+var ballMaterial = new THREE.MeshLambertMaterial({color: ENTITY_COLOR});
 
 // Geometries
 var floorGeo = new THREE.BoxGeometry(TABLE_W, TABLE_T, TABLE_H);

@@ -19,7 +19,7 @@ const CD = 0.47; // Coefficient of drag
 const AIR_DENSE = 1.23; // Air density
 const A = 0.00426; // Cross sectional area
 
-const HIT_CAP = 3;
+const HIT_CAP = 2;
 const HIT_DELAY_TIME = 70;
 const HIT_MULTIPLIER = 5;
 const HIT_ADD = 0;
@@ -52,7 +52,9 @@ function update() {
     if (!win && !lose && !paused && hitPause <= 0) {
         updateUserPaddle();
         // hitting
+        let hitMeter = document.getElementById("HitMeter1");
         if (hitFrame > 0) {
+            hitMeter.style.backgroundColor = "#00BBFF"
             if (hitFrame > HIT_CAP) {
                 hitDelay = HIT_DELAY_TIME;
                 hitFrame = 0;
@@ -65,15 +67,18 @@ function update() {
             
         }
 
+        // Update Hit Meter
+        if (hitFrame == 0) {
+            let hitWidth = (100 * (1 - (hitDelay / HIT_DELAY_TIME))).toString() + "%";
+            let hitColor = "#" + linColorInterp("FC0324", "5EFC03", 1- hitDelay / HIT_DELAY_TIME);
+            hitMeter.style.width = hitWidth;
+            hitMeter.style.backgroundColor = hitColor;
+        }
+
         updateAiPaddle();
         updateBall();
+        
 
-        if (hit) {
-            hitLight.intensity = 5;
-            hit = false;
-        } else {
-            hitLight.intensity = 0;
-        }
     }
 }
 
