@@ -47,6 +47,10 @@ let hitDelay = 0; // time between hits
 let hit = false; // unused, idk why its here
 let hitPause = 0; // pauses game when ball hit
 
+// Things for AI to hit
+let totalBounce = 1;
+let succHit = 0;
+
 // UI Colors
 const HIT_BLUE = "#00BBFF";
 const HIT_RED = "FC0324";
@@ -82,6 +86,8 @@ function update() {
         // Update physics
         updateAiPaddle();
         updateBall();
+
+        console.log(succHit / totalBounce);
     }
 }
 
@@ -264,7 +270,11 @@ function updateBall() {
             ballAV += HIT_ADD;
             ballXV += HIT_ADD;
             ballZV += HIT_ADD;
+
+            succHit++;
         }
+
+        totalBounce++;
 
     }
 
@@ -280,6 +290,22 @@ function updateBall() {
         ballXV -= fk * COL_TIME / M;
         ballXV -= Math.sign(ballXV) * aiPaddleXV * SIDE_VEL;
         ballZV = -ballZV + (HIT_VEL * Math.abs(aiPaddleXV));
+
+        if (Math.random() < (succHit / totalBounce)) {
+            hitPause = HIT_PAUSE_TIME;
+            hit = true;
+
+            ballAV *= HIT_MULTIPLIER;
+            ballXV *= HIT_MULTIPLIER;
+            ballZV *= HIT_MULTIPLIER;
+
+            ballAV += HIT_ADD;
+            ballXV += HIT_ADD;
+            ballZV += HIT_ADD;
+
+            succHit++;
+            totalBounce++;
+        }
     }    
 
     // Ball Hit Walls
