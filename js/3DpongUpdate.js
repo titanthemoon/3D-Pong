@@ -26,6 +26,8 @@ const HIT_DELAY_TIME = 70; // time between hits
 const HIT_MULTIPLIER = 5; // multiplies ball velocity when hit by this number
 const HIT_ADD = 0; // amount of velocity to add when hit (after multiplier)
 const HIT_PAUSE_TIME = 20; // time to stop the game for
+const HIT_SPEED_TIMES = 30; // amount of time for which hit speed is up
+const HIT_P_MULT = 2; // multiplier for speed of paddle for HIT_SPEED_TIMES after hit
 
 // Variables for Pong
 let paddleXV = 0; // Player paddle velocity
@@ -46,6 +48,7 @@ let hitFrame = 0; // which frame the hit was on
 let hitDelay = 0; // time between hits
 let hit = false; // unused, idk why its here
 let hitPause = 0; // pauses game when ball hit
+let hitSpeedFrames = 0; // frames after hit which have speed up
 
 // Things for AI to hit
 let totalBounce = 1;
@@ -73,8 +76,9 @@ function update() {
                 hitFrame = 0;
             } else { hitFrame++; } // increment frame
         }
-        // decrement the hit delay if nessecary
+        // decrement the things if nessecary
         if (hitDelay > 0) { hitDelay--; }
+        if (hitSpeedFrames > 0) { hitSpeedFrames--; }
 
         // Update Hit Meter
         if (hitFrame == 0) {
@@ -146,6 +150,8 @@ function updateUserPaddle() {
     } else {
         paddleXV = 0;
     }
+    // speed up paddle after hit
+    if (hitSpeedFrames > 0) { paddleXV *= 2; }
     // update paddle position
     userPad.position.x += paddleXV;
     // check if paddle has hit wall
@@ -166,6 +172,8 @@ function updateAiPaddle() {
     } else {
         aiPaddleXV = 0;
     }
+    // speed up paddle after hit
+    if (hitSpeedFrames > 0) { aiPaddleXV *= 2; }
     // update paddle position
     aiPad.position.x += aiPaddleXV;
     // check if paddle has hit wall
@@ -271,6 +279,8 @@ function updateBall() {
             ballXV += HIT_ADD;
             ballZV += HIT_ADD;
 
+            hitSpeedFrames = HIT_SPEED_TIMES;
+
             succHit++;
         }
 
@@ -302,6 +312,8 @@ function updateBall() {
             ballAV += HIT_ADD;
             ballXV += HIT_ADD;
             ballZV += HIT_ADD;
+
+            hitSpeedFrames += HIT_SPEED_TIMES;
 
             succHit++;
             totalBounce++;
