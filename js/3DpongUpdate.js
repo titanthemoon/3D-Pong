@@ -267,23 +267,7 @@ function updateBall() {
         ballZV = -ballZV - (HIT_VEL * Math.abs(paddleXV));
 
         // hitting
-        if (hitFrame > 0) {
-            hitPause = HIT_PAUSE_TIME;
-            hit = true;
-
-            ballAV *= HIT_MULTIPLIER;
-            ballXV *= HIT_MULTIPLIER;
-            ballZV *= HIT_MULTIPLIER;
-
-            ballAV += HIT_ADD;
-            ballXV += HIT_ADD;
-            ballZV += HIT_ADD;
-
-            hitSpeedFrames = HIT_SPEED_TIMES;
-
-            succHit++;
-        }
-
+        if (hitFrame > 0) { hitBall(); }
         totalBounce++;
 
     }
@@ -302,20 +286,7 @@ function updateBall() {
         ballZV = -ballZV + (HIT_VEL * Math.abs(aiPaddleXV));
 
         if (Math.random() < (succHit / totalBounce)) {
-            hitPause = HIT_PAUSE_TIME;
-            hit = true;
-
-            ballAV *= HIT_MULTIPLIER;
-            ballXV *= HIT_MULTIPLIER;
-            ballZV *= HIT_MULTIPLIER;
-
-            ballAV += HIT_ADD;
-            ballXV += HIT_ADD;
-            ballZV += HIT_ADD;
-
-            hitSpeedFrames += HIT_SPEED_TIMES;
-
-            succHit++;
+            hitBall();
             totalBounce++;
         }
     }    
@@ -348,6 +319,23 @@ function updateBall() {
             newBall();
         }
     }
+}
+
+function hitBall() {
+    hitPause = HIT_PAUSE_TIME;
+    hit = true;
+
+    ballAV *= HIT_MULTIPLIER;
+    ballXV *= HIT_MULTIPLIER;
+    ballZV *= HIT_MULTIPLIER;
+
+    ballAV += HIT_ADD;
+    ballXV += HIT_ADD;
+    ballZV += HIT_ADD;
+
+    hitSpeedFrames += HIT_SPEED_TIMES;
+
+    succHit++;
 }
 
 function newBall() {
