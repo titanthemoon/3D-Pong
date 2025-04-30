@@ -1,0 +1,68 @@
+body {
+    margin: 0;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.button {
+    border-style: solid;
+    background-color: #000000;
+    color: #FFFFFF;
+    font-family: "Quantico", sans-serif;
+}
+
+.button:hover {
+    background-color: #FFFFFF;
+    color: #000000;
+}
+
+.scoreboard {
+    position: fixed;
+    top: 0%;
+    left: 100%;
+    width: 10rem;
+    text-align: center;
+    color: #FFFFFF;
+    transform: translate(-100%, 0%);
+    background-color: rgba(255, 255, 255, 10%);
+    font-family: "Quantico", sans-serif;
+}
+
+.menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 60%;
+    height: 60%;
+    padding: 1rem;
+    transform: translate(-50%, -50%);
+    color: #FFFFFF;
+    background-color: rgba(0, 0, 0, 80%);
+    font-family: "Quantico", sans-serif;
+    border-style: solid;
+    border-color: #FFFFFF;
+}
+
+.text-white {
+    color: #FFFFFF;
+}
+
+.github {
+    position: fixed;
+    top: 100%;
+    left: 0%;
+    text-align: center;
+    transform: translate(0%, -100%);
+    font-family: "Quantico", sans-serif;
+}
+
+.hit-meter {
+    position: fixed;
+    width: 100%;
+    height: 1rem;
+    transform: translate(0%, -100%);
+}
