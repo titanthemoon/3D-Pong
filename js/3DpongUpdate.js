@@ -25,7 +25,7 @@ const HIT_CAP = 2; // number of frames that can be hit for
 const HIT_DELAY_TIME = 70; // time between hits
 const HIT_MULTIPLIER = 5; // multiplies ball velocity when hit by this number
 const HIT_ADD = 0; // amount of velocity to add when hit (after multiplier)
-const HIT_PAUSE_TIME = 20; // time to stop the game for
+const HIT_PAUSE_TIME = 0; // time to stop the game for
 const HIT_SPEED_TIMES = 30; // amount of time for which hit speed is up
 const HIT_P_MULT = 2; // multiplier for speed of paddle for HIT_SPEED_TIMES after hit
 
