@@ -1,195 +1,147 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
+    <head>
+        <meta charset="utf-8">
+        <title>3D Pong</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+            rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+            rel="stylesheet">
+        <link href="./css/menu.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    </head>
+    <body>
+        <script>
+            (function () { var script = document.createElement('script'); script.onload = function () { var stats = new Stats(); document.body.appendChild(stats.dom); requestAnimationFrame(function loop() { stats.update(); requestAnimationFrame(loop) }); }; script.src = 'https://mrdoob.github.io/stats.js/build/stats.min.js'; document.head.appendChild(script); })()
 
-<head>
-    <meta charset="UTF-8">
-    <title>THREEJS PONG</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quantico:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-        rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
-        rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-        }
+            var scene = new THREE.Scene();
+            var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100000);
 
-        canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-
-        .button {
-            border-style: solid;
-            background-color: #000000;
-            color: #FFFFFF;
-            font-family: "Quantico", sans-serif;
-        }
-
-        .button:hover {
-            background-color: #FFFFFF;
-            color: #000000;
-        }
-
-        .scoreboard {
-            position: fixed;
-            top: 0%;
-            left: 100%;
-            width: 10rem;
-            text-align: center;
-            color: #FFFFFF;
-            transform: translate(-100%, 0%);
-            background-color: rgba(255, 255, 255, 10%);
-            font-family: "Quantico", sans-serif;
-        }
-
-        .menu {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 60%;
-            height: 60%;
-            padding: 1rem;
-            transform: translate(-50%, -50%);
-            color: #FFFFFF;
-            background-color: rgba(0, 0, 0, 80%);
-            font-family: "Quantico", sans-serif;
-            border-style: solid;
-            border-color: #FFFFFF;
-        }
-
-        .text-white {
-            color: #FFFFFF;
-        }
-
-        .github {
-            position: fixed;
-            top: 100%;
-            left: 0%;
-            text-align: center;
-            transform: translate(0%, -100%);
-            font-family: "Quantico", sans-serif;
-        }
-
-        .hit-meter {
-            position: fixed;
-            width: 100%;
-            height: 1rem;
-            transform: translate(0%, -100%);
-        }
-
-    </style>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-</head>
-
-<body>
-
-    <script>
-
-        (function () { var script = document.createElement('script'); script.onload = function () { var stats = new Stats(); document.body.appendChild(stats.dom); requestAnimationFrame(function loop() { stats.update(); requestAnimationFrame(loop) }); }; script.src = 'https://mrdoob.github.io/stats.js/build/stats.min.js'; document.head.appendChild(script); })()
-
-        var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100000);
-
-        var renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
 
 
-        window.addEventListener('resize', function () {
-            var width = window.innerWidth;
-            var height = window.innerHeight;
-            renderer.setSize(width, height);
-            camera.aspect = width / height;
-            camera.updateProjectionMatrix();
-        });
+            window.addEventListener('resize', function () {
+                var width = window.innerWidth;
+                var height = window.innerHeight;
+                renderer.setSize(width, height);
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+            });
 
-        //controls = new THREE.OrbitControls( camera, renderer.domElement );
+            camera.position.z = 60;
+            camera.position.y = 40;
+            camera.rotation.x = 24.5;
 
-        //var axesHelper = new THREE.AxesHelper(12);
-        //scene.add( axesHelper );
-
-        camera.position.z = 60;
-        camera.position.y = 40;
-        camera.rotation.x = 24.5;
-
-        let timeDelta, timeLast;
-    </script>
-    <script src="js/3DpongUtil.js"></script>
-    <script src="js/3DpongConstants.js"></script>
-    <script src="js/3DpongLight.js"></script>
-    <script src="js/3DpongUpdate.js"></script>
-    <script src="js/3DpongDraw.js"></script>
-
-    <script>
-        function render() {
+            let timeDelta, timeLast;
+        </script>
+        <script src="js/3DpongUtil.js"></script>
+        <script src="js/3DpongConstants.js"></script>
+        <script src="js/3DpongLight.js"></script>
+        <script src="js/3DpongUpdate.js"></script>
+        <script src="js/3DpongDraw.js"></script>
+        <script>
+            function render() {
             renderer.render(scene, camera);
-        }
-
-        function animate(timeNow) {
-            requestAnimationFrame(animate);
-            if (!timeLast) {
-                timeLast = timeNow;
             }
-            timeDelta = (timeNow - timeLast) * 0.001;
-            timeLast = timeNow;
 
-            render();
-            update();
-        }
+            function animate(timeNow) {
+                requestAnimationFrame(animate);
+                if (!timeLast) {
+                    timeLast = timeNow;
+                }
+                timeDelta = (timeNow - timeLast) * 0.001;
+                timeLast = timeNow;
 
-        function start() { // For some reason this has to be its own function or everything breaks
-            requestAnimationFrame(animate);
-            document.getElementById("StartScreen").style.visibility = "hidden";
-        }
-
-    </script>
-    <div class="scoreboard">
-        <div style="height: 100%; width: 50%; float: left;">
-            <h2>AI</h2>
-            <h2 id="AIScore">0</h2>
+                render();
+                update();
+            }
+        </script>
+        <div class="scoreboard">
+            <div style="height: 100%; width: 50%; float: left;">
+                <h2>AI</h2>
+                <h2 id="AIScore">0</h2>
+            </div>
+            <div style="height: 100%; width: 50%; float: right;">
+                <h2>YOU</h2>
+                <h2 id="PlayerScore">0</h2>
+            </div>
         </div>
-        <div style="height: 100%; width: 50%; float: right;">
-            <h2>YOU</h2>
-            <h2 id="PlayerScore">0</h2>
+        <div class="game-menu" id="PlayerWin" style="visibility: hidden;">
+            <div style="text-align: center;">
+                <h1>YOU WON!</h1>
+            </div>
+            <button type="button" class="game-button" onclick="newGame()" style="width: 100%; position: fixed; bottom: 0%; left:0%">
+                <h3>NEW GAME</h3>
+            </button>
         </div>
-    </div>
-    <div class="menu" id="StartScreen">
-        <h1 style="text-align: center;">CONTROLS</h1>
-        <div style="display: flex; justify-content: center; width: 100%; padding-bottom: 1rem;">
-            <object data="./assets/controls.svg" type="image/svg+xml" style="width: 50%;" ></object>
+        <div class="game-menu" id="PlayerLose" style="visibility: hidden;">
+            <div style="text-align: center;">
+                <h1>YOU LOST!</h1>
+            </div>
+            <button type="button" class="game-button" onclick="newGame()" style="width: 100%; position: fixed; bottom: 0%; left:0%">
+                <h3>NEW GAME</h3>
+            </button>
         </div>
-        <div style="text-align: center;">
-            <h3>A/D or Left/Right</h3>
-            <p>Move the paddle left/right.</p>
-            <h3>W/S or Up/Down</h3>
-            <p>Adjust the speed at which the paddle moves.</p>
+        <div class="hit-meter" id="HitMeter1"></div>
+        <div class="menu menu-main" id="main">
+            <pre class="title">
+██████╗ ██████╗       ██████╗  ██████╗ ███╗   ██╗ ██████╗ 
+╚════██╗██╔══██╗      ██╔══██╗██╔═══██╗████╗  ██║██╔════╝ 
+ █████╔╝██║  ██║█████╗██████╔╝██║   ██║██╔██╗ ██║██║  ███╗
+ ╚═══██╗██║  ██║╚════╝██╔═══╝ ██║   ██║██║╚██╗██║██║   ██║
+██████╔╝██████╔╝      ██║     ╚██████╔╝██║ ╚████║╚██████╔╝
+╚═════╝ ╚═════╝       ╚═╝      ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝ 
+            </pre>
+            <div class="button-container">
+                <button class="button to-game" type="button" onclick="startGame()">
+                      <h1 class="button-text">PLAY</h1>
+                  </button>
+                <button class="button to-controls" type="button" onclick="showControls()">
+                    <h1 class="button-text">CONTROLS</h1>
+                </button>
+                <button class="button to-options" type="button" onclick="showOptions()">
+                    <h1 class="button-text">OPTIONS</h1>
+                </button>
+            </div>
         </div>
-        <button type="button" class="button" onclick="start()" style="width: 100%; position: fixed; bottom: 0%; left:0%">
-            <h3>START GAME</h3>
-        </button>
-    </div>
-    <div class="menu" id="PlayerWin" style="visibility: hidden;">
-        <div style="text-align: center;">
-            <h1>YOU WON!</h1>
+        <div class="menu menu-controls" id="controls">
+            <pre class="title">
+ ██████╗ ██████╗ ███╗   ██╗████████╗██████╗  ██████╗ ██╗     ███████╗
+██╔════╝██╔═══██╗████╗  ██║╚══██╔══╝██╔══██╗██╔═══██╗██║     ██╔════╝
+██║     ██║   ██║██╔██╗ ██║   ██║   ██████╔╝██║   ██║██║     ███████╗
+██║     ██║   ██║██║╚██╗██║   ██║   ██╔══██╗██║   ██║██║     ╚════██║
+╚██████╗╚██████╔╝██║ ╚████║   ██║   ██║  ██║╚██████╔╝███████╗███████║
+ ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝
+            </pre>
+            <div class="button-container">
+                <button class="button to-main" type="button" onclick="showMain()">
+                    <h1 class="button-text">
+                        MAIN MENU
+                    </h1>
+                </button>
+            </div>
         </div>
-        <button type="button" class="button" onclick="newGame()" style="width: 100%; position: fixed; bottom: 0%; left:0%">
-            <h3>NEW GAME</h3>
-        </button>
-    </div>
-    <div class="menu" id="PlayerLose" style="visibility: hidden;">
-        <div style="text-align: center;">
-            <h1>YOU LOST!</h1>
+        <div class="menu menu-options" id="options">
+            <pre class="title">
+ ██████╗ ██████╗ ████████╗██╗ ██████╗ ███╗   ██╗███████╗
+██╔═══██╗██╔══██╗╚══██╔══╝██║██╔═══██╗████╗  ██║██╔════╝
+██║   ██║██████╔╝   ██║   ██║██║   ██║██╔██╗ ██║███████╗
+██║   ██║██╔═══╝    ██║   ██║██║   ██║██║╚██╗██║╚════██║
+╚██████╔╝██║        ██║   ██║╚██████╔╝██║ ╚████║███████║
+  ╚═════╝ ╚═╝        ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝ 
+            </pre>
+            <div class="button-container">
+                <button class="button to-main" type="button" onclick="showMain()">
+                    <h1 class="button-text">
+                        MAIN MENU
+                    </h1>
+                </button>
+            </div>
         </div>
-        <button type="button" class="button" onclick="newGame()" style="width: 100%; position: fixed; bottom: 0%; left:0%">
-            <h3>NEW GAME</h3>
-        </button>
-    </div>
-    <div class="hit-meter" id="HitMeter1"></div>
-</body>
-
+        <script src="js/menu.js"></script>
+    </body>
 </html>

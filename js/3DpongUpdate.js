@@ -1,3 +1,4 @@
+// Constants for Pong
 const MIN_BOUNCE_ANGLE = 30;
 const BALL_SPIN = 2;
 let PADDLE_SPEED = 40; // I know this is kind of disgusting
@@ -19,29 +20,44 @@ const CD = 0.47; // Coefficient of drag
 const AIR_DENSE = 1.23; // Air density
 const A = 0.00426; // Cross sectional area
 
-const HIT_CAP = 2;
-const HIT_DELAY_TIME = 70;
-const HIT_MULTIPLIER = 5;
-const HIT_ADD = 0;
-const HIT_PAUSE_TIME = 20;
+// Hitting constants
+const HIT_CAP = 2; // number of frames that can be hit for
+const HIT_DELAY_TIME = 70; // time between hits
+const HIT_MULTIPLIER = 5; // multiplies ball velocity when hit by this number
+const HIT_ADD = 0; // amount of velocity to add when hit (after multiplier)
+const HIT_PAUSE_TIME = 0; // time to stop the game for
+const HIT_SPEED_TIMES = 30; // amount of time for which hit speed is up
+const HIT_P_MULT = 2; // multiplier for speed of paddle for HIT_SPEED_TIMES after hit
 
-let paddleXV = 0;
-let aiPaddleXV = 0;
-let paddleLeft = false;
+// Variables for Pong
+let paddleXV = 0; // Player paddle velocity
+let aiPaddleXV = 0; // AI paddle velocity
+let paddleLeft = false; // self explanatory
 let paddleRight = false;
-let ballXV = BALL_SPEED;
-let ballZV = BALL_SPEED;
-let ballAV = 0;
+let ballXV = BALL_SPEED; // X (left-right) velocity of ball
+let ballZV = BALL_SPEED; // Z (up-down) velocity of ball
+let ballAV = 0; // Angular velocity of ball
 let aiScore = 0;
 let userScore = 0;
 let win = false;
 let lose = false;
 let paused = false;
 
-let hitFrame = 0;
-let hitDelay = 0;
-let hit = false;
-let hitPause = 0;
+// Ball hitting code
+let hitFrame = 0; // which frame the hit was on
+let hitDelay = 0; // time between hits
+let hit = false; // unused, idk why its here
+let hitPause = 0; // pauses game when ball hit
+let hitSpeedFrames = 0; // frames after hit which have speed up
+
+// Things for AI to hit
+let totalBounce = 1;
+let succHit = 0;
+
+// UI Colors
+const HIT_BLUE = "#00BBFF";
+const HIT_RED = "FC0324";
+const HIT_GREEN = "5EFC03";
 
 document.addEventListener('keydown', keyDown);
 document.addEventListener('keyup', keyUp);
@@ -49,55 +65,52 @@ document.addEventListener('keyup', keyUp);
 function update() {
     updateEnd();
     hitPause--;
-    if (!win && !lose && !paused && hitPause <= 0) {
+    if (!win && !lose && !paused && hitPause <= 0) { // check if update possible
         updateUserPaddle();
         // hitting
-        let hitMeter = document.getElementById("HitMeter1");
+        let hitMeter = document.getElementById("HitMeter1"); // get hit meter to update UI
         if (hitFrame > 0) {
-            hitMeter.style.backgroundColor = "#00BBFF"
-            if (hitFrame > HIT_CAP) {
+            hitMeter.style.backgroundColor = HIT_BLUE;
+            if (hitFrame > HIT_CAP) { // stop hitting if higher than hit cap
                 hitDelay = HIT_DELAY_TIME;
                 hitFrame = 0;
-            } else {
-                hitFrame++;
-            }
+            } else { hitFrame++; } // increment frame
         }
-        if (hitDelay > 0) {
-            hitDelay--;
-            
-        }
+        // decrement the things if nessecary
+        if (hitDelay > 0) { hitDelay--; }
+        if (hitSpeedFrames > 0) { hitSpeedFrames--; }
 
         // Update Hit Meter
         if (hitFrame == 0) {
             let hitWidth = (100 * (1 - (hitDelay / HIT_DELAY_TIME))).toString() + "%";
-            let hitColor = "#" + linColorInterp("FC0324", "5EFC03", 1- hitDelay / HIT_DELAY_TIME);
+            let hitColor = "#" + linColorInterp(HIT_RED, HIT_GREEN, 1- hitDelay / HIT_DELAY_TIME);
             hitMeter.style.width = hitWidth;
             hitMeter.style.backgroundColor = hitColor;
         }
-
+        // Update physics
         updateAiPaddle();
         updateBall();
-        
 
+        console.log(succHit / totalBounce);
     }
 }
 
 function keyDown(/** @type {keyboardEvent} */ ev) {
     switch (ev.keyCode) {
-        case 37:
-        case 65:
+        case 37: // Left arrow
+        case 65: // A
             paddleLeft = true;
             break;
-        case 39:
-        case 68:
+        case 39: // Right arrow 
+        case 68: // D
             paddleRight = true;
             break;
-        case 32:
+        case 32: // Space
             if (hitDelay == 0) {
                 hitFrame = 1;
             }
             break;
-        case 80:
+        case 80: // P
             paused = !paused;
             break;
     }
@@ -105,22 +118,22 @@ function keyDown(/** @type {keyboardEvent} */ ev) {
 
 function keyUp(/** @type {keyboardEvent} */ ev) {
     switch (ev.keyCode) {
-        case 37:
-        case 65:
+        case 37: // Left arrow
+        case 65: // A
             paddleLeft = false;
             break;
-        case 39:
-        case 68:
+        case 39: // Right arrow
+        case 68: // D
             paddleRight = false;
             break;
-        case 38:
-        case 87:
+        case 38: // Up arrow
+        case 87: // W
             if (PADDLE_SPEED < 80) {
                 PADDLE_SPEED += 10;
             }
             break;
-        case 40:
-        case 83:
+        case 40: // Down arrow
+        case 83: // S
             if (PADDLE_SPEED > 40) {
                 PADDLE_SPEED -= 10;
             }
@@ -129,7 +142,7 @@ function keyUp(/** @type {keyboardEvent} */ ev) {
 }
 
 function updateUserPaddle() {
-
+    // check which keys are being held down, update paddle motion
     if (paddleLeft && !paddleRight) {
         paddleXV = -PADDLE_SPEED * timeDelta;
     } else if (!paddleLeft && paddleRight) {
@@ -137,17 +150,21 @@ function updateUserPaddle() {
     } else {
         paddleXV = 0;
     }
-
+    // speed up paddle after hit
+    if (hitSpeedFrames > 0) { paddleXV *= 2; }
+    // update paddle position
     userPad.position.x += paddleXV;
-
-    if (userPad.position.x < -(TABLE_W / 2) + (PADDLE_W / 2)) {
+    // check if paddle has hit wall
+    if (userPad.position.x < -(TABLE_W / 2) + (PADDLE_W / 2)) { // left
         userPad.position.x = -(TABLE_W / 2) + (PADDLE_W / 2);
-    } else if (userPad.position.x > (TABLE_W / 2) - (PADDLE_W / 2)) {
+    } else if (userPad.position.x > (TABLE_W / 2) - (PADDLE_W / 2)) { // right
        userPad.position.x = (TABLE_W / 2) - (PADDLE_W / 2);
     }
 }
 
 function updateAiPaddle() {
+    // move paddle towards ball
+    // TODO: improve ai paddle
     if (ball.position.x < aiPad.position.x - 0.5) {
         aiPaddleXV = -AI_PADDLE_SPEED * timeDelta;
     } else if (ball.position.x > aiPad.position.x + 0.5) {
@@ -155,10 +172,14 @@ function updateAiPaddle() {
     } else {
         aiPaddleXV = 0;
     }
+    // speed up paddle after hit
+    if (hitSpeedFrames > 0) { aiPaddleXV *= 2; }
+    // update paddle position
     aiPad.position.x += aiPaddleXV;
-    if (aiPad.position.x < -(TABLE_W / 2) + (PADDLE_W / 2)) {
+    // check if paddle has hit wall
+    if (aiPad.position.x < -(TABLE_W / 2) + (PADDLE_W / 2)) { // left
         aiPad.position.x = -(TABLE_W / 2) + (PADDLE_W / 2);
-    } else if (aiPad.position.x > (TABLE_W / 2) - (PADDLE_W / 2)) {
+    } else if (aiPad.position.x > (TABLE_W / 2) - (PADDLE_W / 2)) { // right
         aiPad.position.x = (TABLE_W / 2) - (PADDLE_W / 2);
     }
 }
@@ -167,10 +188,12 @@ function ballVelocityCurve(vel) {
 
     vel = Math.abs(vel);
 
+    // cap at which each parabola begins
     let threshold1 = 0.01;
     let threshold2 = 0.10;
     let threshold3 = 0.99;
 
+    // drag is determined by parabolas
     if (vel <= 50) {
         return threshold1;
     } else if (vel <= 100) {
@@ -190,6 +213,7 @@ function ballAngVelocityCurve(vel) {
     let threshold2 = 0.50;
     let threshold3 = 0.99;
 
+    // more parabolas
     if (vel <= 30) {
         return threshold1;
     } else if (vel <= 60) {
@@ -202,10 +226,9 @@ function ballAngVelocityCurve(vel) {
 }
 
 function updateBall() {
-
     // Some things needed for calculations
-    let v = (ballXV * ballXV) + (ballZV * ballZV);
-    let vDir = Math.atan(ballZV / ballXV) + (Math.PI * (ballXV < 0 ? 1 : 0));
+    let v = (ballXV * ballXV) + (ballZV * ballZV); // magnitude^2
+    let vDir = Math.atan(ballZV / ballXV) + (Math.PI * (ballXV < 0 ? 1 : 0)); // direction
 
     // Calculate Magnus force and acceleration
     let Fm = 0.5 * CL * AIR_DENSE * A * v * (Math.sqrt(v) * (ballAV * Math.PI / 180));
@@ -230,7 +253,8 @@ function updateBall() {
     ball.position.z += ballZV * timeDelta;
     ball.rotation.y += ballAV * timeDelta;
 
-    if (ball.position.z + (BALL_W / 2) > userPad.position.z - (PADDLE_H / 2) 
+    // Ball hit player paddle
+    if (ball.position.z + (BALL_W / 2) > userPad.position.z - (PADDLE_H / 2)
         && ball.position.z - (BALL_W / 2) < userPad.position.z + (PADDLE_H / 2)
         && ball.position.x - (BALL_W / 2) < userPad.position.x + (PADDLE_W / 2)
         && ball.position.x + (BALL_W / 2) > userPad.position.x - (PADDLE_W / 2)
@@ -243,21 +267,12 @@ function updateBall() {
         ballZV = -ballZV - (HIT_VEL * Math.abs(paddleXV));
 
         // hitting
-        if (hitFrame > 0) {
-            hitPause = HIT_PAUSE_TIME;
-            hit = true;
-
-            ballAV *= HIT_MULTIPLIER;
-            ballXV *= HIT_MULTIPLIER;
-            ballZV *= HIT_MULTIPLIER;
-
-            ballAV += HIT_ADD;
-            ballXV += HIT_ADD;
-            ballZV += HIT_ADD;
-        }
+        if (hitFrame > 0) { hitBall(); }
+        totalBounce++;
 
     }
 
+    // Ball hit AI paddle
     if (ball.position.z - (BALL_W / 2) < aiPad.position.z + (PADDLE_H / 2) 
         && ball.position.z + (BALL_W / 2) > aiPad.position.z - (PADDLE_H / 2)
         && ball.position.x - (BALL_W / 2) < aiPad.position.x + (PADDLE_W / 2)
@@ -269,8 +284,14 @@ function updateBall() {
         ballXV -= fk * COL_TIME / M;
         ballXV -= Math.sign(ballXV) * aiPaddleXV * SIDE_VEL;
         ballZV = -ballZV + (HIT_VEL * Math.abs(aiPaddleXV));
+
+        if (Math.random() < (succHit / totalBounce)) {
+            hitBall();
+            totalBounce++;
+        }
     }    
 
+    // Ball Hit Walls
     if (ball.position.x < -(TABLE_W / 2) + (BALL_W / 2)) {
         let fk = (-2 * M * UK * ballXV) / COL_TIME;
         ball.position.x = -(TABLE_W / 2) + (BALL_W / 2);
@@ -286,6 +307,7 @@ function updateBall() {
         ballZV -= fk * COL_TIME / M;
     }
 
+    // Ball scored
     if (ball.position.z > GOAL_H ) {
         aiScore++;
         if (!win && !lose) {
@@ -297,6 +319,23 @@ function updateBall() {
             newBall();
         }
     }
+}
+
+function hitBall() {
+    hitPause = HIT_PAUSE_TIME;
+    hit = true;
+
+    ballAV *= HIT_MULTIPLIER;
+    ballXV *= HIT_MULTIPLIER;
+    ballZV *= HIT_MULTIPLIER;
+
+    ballAV += HIT_ADD;
+    ballXV += HIT_ADD;
+    ballZV += HIT_ADD;
+
+    hitSpeedFrames += HIT_SPEED_TIMES;
+
+    succHit++;
 }
 
 function newBall() {
