@@ -55,9 +55,16 @@
                 }
                 timeDelta = (timeNow - timeLast) * 0.001;
                 timeLast = timeNow;
+                timeDelta /= UPDATES_PER_FRAME;
+                if (slowMotionFrames > 0) {
+                    update();
+                } else {
+                    for (let i = 0; i < UPDATES_PER_FRAME; i++) {
+                        update();
+                    }
+                }
 
                 render();
-                update();
             }
         </script>
         <div class="scoreboard">

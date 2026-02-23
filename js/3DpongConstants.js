@@ -17,3 +17,5 @@ const BALL_W = 3;
 // net
 const NET_T = 0.5;
 const NET_H = 1;
+
+const UPDATES_PER_FRAME = 10;

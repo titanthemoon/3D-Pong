@@ -21,13 +21,14 @@ const AIR_DENSE = 1.23; // Air density
 const A = 0.00426; // Cross sectional area
 
 // Hitting constants
-const HIT_CAP = 2; // number of frames that can be hit for
-const HIT_DELAY_TIME = 70; // time between hits
+const HIT_CAP = 2 * UPDATES_PER_FRAME; // number of frames that can be hit for
+const HIT_DELAY_TIME = 70 * UPDATES_PER_FRAME; // time between hits
 const HIT_MULTIPLIER = 5; // multiplies ball velocity when hit by this number
 const HIT_ADD = 0; // amount of velocity to add when hit (after multiplier)
-const HIT_PAUSE_TIME = 0; // time to stop the game for
-const HIT_SPEED_TIMES = 30; // amount of time for which hit speed is up
+const HIT_PAUSE_TIME = 0 * UPDATES_PER_FRAME; // time to stop the game for
+const HIT_SPEED_TIMES = 30 * UPDATES_PER_FRAME; // amount of time for which hit speed is up
 const HIT_P_MULT = 2; // multiplier for speed of paddle for HIT_SPEED_TIMES after hit
+const SLOW_MOTION_TIME = 30 * UPDATES_PER_FRAME; // time to spend in slow motion
 
 // Variables for Pong
 let paddleXV = 0; // Player paddle velocity
@@ -47,6 +48,7 @@ let paused = false;
 let hitFrame = 0; // which frame the hit was on
 let hitDelay = 0; // time between hits
 let hit = false; // unused, idk why its here
+let slowMotionFrames = 0;
 let hitPause = 0; // pauses game when ball hit
 let hitSpeedFrames = 0; // frames after hit which have speed up
 
@@ -65,6 +67,7 @@ document.addEventListener('keyup', keyUp);
 function update() {
     updateEnd();
     hitPause--;
+    slowMotionFrames--;
     if (!win && !lose && !paused && hitPause <= 0) { // check if update possible
         updateUserPaddle();
         // hitting
@@ -323,6 +326,7 @@ function updateBall() {
 
 function hitBall() {
     hitPause = HIT_PAUSE_TIME;
+    slowMotionFrames = SLOW_MOTION_TIME;
     hit = true;
 
     ballAV *= HIT_MULTIPLIER;
@@ -335,11 +339,12 @@ function hitBall() {
 
     hitSpeedFrames += HIT_SPEED_TIMES;
 
+
     succHit++;
 }
 
 function newBall() {
-
+    slowMotionFrames = 0;
     document.getElementById("AIScore").innerHTML = aiScore;
     document.getElementById("PlayerScore").innerHTML = userScore;
 
