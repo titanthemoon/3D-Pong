@@ -2,7 +2,7 @@
 const MIN_BOUNCE_ANGLE = 30;
 const BALL_SPIN = 2;
 let PADDLE_SPEED = 40; // I know this is kind of disgusting
-const AI_PADDLE_SPEED = 50;
+const AI_PADDLE_SPEED = 150;
 const BALL_SPEED = 21;
 const SIDE_VEL = 10;
 const HIT_VEL = 10;
@@ -252,6 +252,7 @@ function updateBall() {
     ballAV -= ballAV * ballAngVelocityCurve(ballAV) * timeDelta;
 
     // Apply velocity
+
     ball.position.x += ballXV * timeDelta;
     ball.position.z += ballZV * timeDelta;
     ball.rotation.y += ballAV * timeDelta;

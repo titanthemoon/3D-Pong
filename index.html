@@ -57,8 +57,10 @@
                 timeLast = timeNow;
                 timeDelta /= UPDATES_PER_FRAME;
                 if (slowMotionFrames > 0) {
+                    hitLight.intensity = 2;
                     update();
                 } else {
+                    hitLight.intensity = 0;
                     for (let i = 0; i < UPDATES_PER_FRAME; i++) {
                         update();
                     }
